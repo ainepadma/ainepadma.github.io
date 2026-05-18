@@ -25,6 +25,8 @@
             --radius-lg: 28px;
             --radius-md: 18px;
             --radius-pill: 999px;
+            --rail-width: clamp(240px, 28vw, 320px);
+            --rail-gap: clamp(18px, 3vw, 28px);
         }
 
         * {
@@ -46,6 +48,7 @@
             flex: 1;
             overflow: hidden;
             padding: 6vw 6vw 8vw;
+            min-height: 120vh;
         }
 
         .orb {
@@ -89,7 +92,9 @@
             max-width: 980px;
             margin: 0 auto;
             display: grid;
+            grid-template-columns: 1fr;
             gap: 28px;
+            transition: gap 0.45s ease, max-width 0.45s ease, margin 0.45s ease;
         }
 
         .hero {
@@ -102,6 +107,7 @@
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow);
             animation: fadeUp 0.8s ease-out;
+            transition: transform 0.45s ease, box-shadow 0.45s ease;
         }
 
         .avatar {
@@ -165,6 +171,7 @@
             padding: 28px 30px 24px;
             box-shadow: var(--shadow);
             animation: fadeUp 0.9s ease-out 0.1s both;
+            transition: transform 0.45s ease, box-shadow 0.45s ease, min-height 0.45s ease;
         }
 
         .info-header {
@@ -235,6 +242,25 @@
             text-decoration: underline;
         }
 
+        html.scrolled main {
+            max-width: none;
+            margin: 0;
+            gap: var(--rail-gap);
+            grid-template-columns: var(--rail-width) minmax(0, 1fr);
+            align-items: start;
+        }
+
+        html.scrolled .hero {
+            position: sticky;
+            top: 28px;
+            align-self: start;
+            transform: translateX(-8px);
+        }
+
+        html.scrolled .info-panel {
+            min-height: calc(100vh - 56px);
+        }
+
         @keyframes fadeUp {
             from {
                 opacity: 0;
@@ -271,6 +297,22 @@
 
             .avatar {
                 margin: 0 auto;
+            }
+
+            html.scrolled main {
+                grid-template-columns: 1fr;
+                margin: 0 auto;
+                max-width: 980px;
+            }
+
+            html.scrolled .hero {
+                position: relative;
+                top: auto;
+                transform: none;
+            }
+
+            html.scrolled .info-panel {
+                min-height: auto;
             }
         }
 
@@ -337,6 +379,26 @@
                         </p>
                     </article>
                     <article class="scroll-card">
+                        <h3>Contest Project</h3>
+                        <p>28th SEU Electronics Design Contest, Problem D (2026).</p>
+                    </article>
+                    <article class="scroll-card">
+                        <h3>Hardware Stack</h3>
+                        <p>MaixCAM PRO + STM32F103C8T6 + SSD1315 0.96" OLED.</p>
+                    </article>
+                    <article class="scroll-card">
+                        <h3>Vision Pipeline</h3>
+                        <p>Dual-model detection, IoU tracking, and liquid surface scoring.</p>
+                    </article>
+                    <article class="scroll-card">
+                        <h3>Data Link</h3>
+                        <p>UART streaming to STM32 for fusion and display.</p>
+                    </article>
+                    <article class="scroll-card">
+                        <h3>Current Sensing</h3>
+                        <p>INA240A1 + 100 mOhm shunt for real-time current readout.</p>
+                    </article>
+                    <article class="scroll-card">
                         <h3>Add more</h3>
                         <p>Drop extra notes, links, or milestones here.</p>
                     </article>
@@ -344,6 +406,29 @@
             </section>
         </main>
     </div>
+    <script>
+        (() => {
+            const root = document.documentElement;
+            const threshold = 60;
+            let ticking = false;
+
+            const update = () => {
+                ticking = false;
+                root.classList.toggle("scrolled", window.scrollY > threshold);
+            };
+
+            const requestTick = () => {
+                if (!ticking) {
+                    ticking = true;
+                    window.requestAnimationFrame(update);
+                }
+            };
+
+            window.addEventListener("scroll", requestTick, { passive: true });
+            window.addEventListener("resize", requestTick);
+            window.addEventListener("load", update);
+        })();
+    </script>
 </body>
 
 </html>
