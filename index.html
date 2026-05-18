@@ -1,434 +1,50 @@
-<!doctype html>
-<html lang="en">
+---
+layout: default
+title: Home
+---
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Ainepadma | Home</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Space+Grotesk:wght@400;500;600&display=swap"
-        rel="stylesheet" />
-    <style>
-        :root {
-            color-scheme: only light;
-            --bg-ink: #0d1f21;
-            --bg-moss: #112c2b;
-            --bg-sand: #f4efe8;
-            --ink-strong: #0b1213;
-            --ink-soft: #293436;
-            --accent-gold: #f4b35a;
-            --accent-teal: #2cb9a7;
-            --card: #ffffff;
-            --shadow: 0 24px 60px rgba(15, 32, 32, 0.18);
-            --radius-lg: 28px;
-            --radius-md: 18px;
-            --radius-pill: 999px;
-            --rail-width: clamp(240px, 28vw, 320px);
-            --rail-gap: clamp(18px, 3vw, 28px);
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: "Space Grotesk", "Segoe UI", sans-serif;
-            background: radial-gradient(circle at top, #f9f5ef 0%, #f3efe6 40%, #e6efe9 100%);
-            color: var(--ink-strong);
-            min-height: 100vh;
-            display: flex;
-            align-items: stretch;
-        }
-
-        .stage {
-            position: relative;
-            flex: 1;
-            overflow: hidden;
-            padding: 6vw 6vw 8vw;
-            min-height: 120vh;
-        }
-
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(10px);
-            opacity: 0.65;
-            z-index: 0;
-            animation: float 14s ease-in-out infinite;
-        }
-
-        .orb.one {
-            width: 380px;
-            height: 380px;
-            background: radial-gradient(circle at 30% 30%, #ffd9a1, #f4b35a 70%);
-            top: -140px;
-            left: -120px;
-        }
-
-        .orb.two {
-            width: 280px;
-            height: 280px;
-            background: radial-gradient(circle at 40% 30%, #8ce0d4, #2cb9a7 70%);
-            bottom: -80px;
-            right: -60px;
-            animation-delay: -5s;
-        }
-
-        .orb.three {
-            width: 160px;
-            height: 160px;
-            background: radial-gradient(circle at 50% 35%, #f8f1da, #f0cf97 70%);
-            top: 45%;
-            right: 12%;
-            animation-delay: -2s;
-        }
-
-        main {
-            position: relative;
-            z-index: 1;
-            max-width: 980px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 28px;
-            transition: gap 0.45s ease, max-width 0.45s ease, margin 0.45s ease;
-        }
-
-        .hero {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 28px;
-            align-items: center;
-            background: var(--card);
-            padding: 32px 36px;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow);
-            animation: fadeUp 0.8s ease-out;
-            transition: transform 0.45s ease, box-shadow 0.45s ease;
-        }
-
-        .avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 28px;
-            object-fit: cover;
-            border: 6px solid #fefcf8;
-            box-shadow: 0 16px 30px rgba(15, 32, 32, 0.22);
-        }
-
-        .eyebrow {
-            font-size: 0.85rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--ink-soft);
-            margin: 0 0 10px;
-        }
-
-        h1 {
-            font-family: "Fraunces", "Georgia", serif;
-            font-size: clamp(2.2rem, 4vw, 3.3rem);
-            margin: 0 0 8px;
-        }
-
-        .tagline {
-            margin: 0 0 18px;
-            color: var(--ink-soft);
-            font-size: 1.05rem;
-            max-width: 520px;
-        }
-
-        .links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 18px;
-            border-radius: var(--radius-pill);
-            background: #f6f2ea;
-            color: var(--ink-strong);
-            text-decoration: none;
-            font-weight: 500;
-            border: 1px solid rgba(15, 32, 32, 0.1);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .pill:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(15, 32, 32, 0.12);
-        }
-
-        .info-panel {
-            background: linear-gradient(135deg, #f9f5ef, #fffdf8);
-            border-radius: var(--radius-lg);
-            padding: 28px 30px 24px;
-            box-shadow: var(--shadow);
-            animation: fadeUp 0.9s ease-out 0.1s both;
-            transition: transform 0.45s ease, box-shadow 0.45s ease, min-height 0.45s ease;
-        }
-
-        .info-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            margin-bottom: 18px;
-        }
-
-        .info-title {
-            font-weight: 600;
-            font-size: 1.2rem;
-        }
-
-        .info-hint {
-            font-size: 0.95rem;
-            color: var(--ink-soft);
-        }
-
-        .scroll-track {
-            display: grid;
-            grid-auto-flow: column;
-            grid-auto-columns: minmax(220px, 1fr);
-            gap: 18px;
-            overflow-x: auto;
-            padding-bottom: 8px;
-            scroll-snap-type: x mandatory;
-        }
-
-        .scroll-track::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        .scroll-track::-webkit-scrollbar-thumb {
-            background: rgba(18, 44, 43, 0.25);
-            border-radius: 8px;
-        }
-
-        .scroll-card {
-            background: var(--card);
-            border-radius: var(--radius-md);
-            padding: 18px 20px;
-            min-height: 120px;
-            box-shadow: 0 10px 26px rgba(15, 32, 32, 0.12);
-            scroll-snap-align: start;
-            border: 1px solid rgba(15, 32, 32, 0.08);
-        }
-
-        .scroll-card h3 {
-            margin: 0 0 6px;
-            font-size: 1rem;
-        }
-
-        .scroll-card p {
-            margin: 0;
-            color: var(--ink-soft);
-            font-size: 0.95rem;
-        }
-
-        .scroll-card a {
-            color: var(--accent-teal);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .scroll-card a:hover {
-            text-decoration: underline;
-        }
-
-        html.scrolled main {
-            max-width: none;
-            margin: 0;
-            gap: var(--rail-gap);
-            grid-template-columns: var(--rail-width) minmax(0, 1fr);
-            align-items: start;
-        }
-
-        html.scrolled .hero {
-            position: sticky;
-            top: 28px;
-            align-self: start;
-            transform: translateX(-8px);
-        }
-
-        html.scrolled .info-panel {
-            min-height: calc(100vh - 56px);
-        }
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(18px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0px);
-            }
-
-            50% {
-                transform: translateY(18px);
-            }
-        }
-
-        @media (max-width: 820px) {
-            .hero {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-
-            .links {
-                justify-content: center;
-            }
-
-            .avatar {
-                margin: 0 auto;
-            }
-
-            html.scrolled main {
-                grid-template-columns: 1fr;
-                margin: 0 auto;
-                max-width: 980px;
-            }
-
-            html.scrolled .hero {
-                position: relative;
-                top: auto;
-                transform: none;
-            }
-
-            html.scrolled .info-panel {
-                min-height: auto;
-            }
-        }
-
-        @media (max-width: 520px) {
-            .stage {
-                padding: 50px 20px 70px;
-            }
-
-            .hero,
-            .info-panel {
-                padding: 24px 22px;
-            }
-
-            .scroll-track {
-                grid-auto-columns: 80%;
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <div class="stage">
-        <div class="orb one" aria-hidden="true"></div>
-        <div class="orb two" aria-hidden="true"></div>
-        <div class="orb three" aria-hidden="true"></div>
-
-        <main>
-            <section class="hero">
-                <img class="avatar" src="https://github.com/ainepadma.png" alt="Ainepadma GitHub avatar" />
-                <div>
-                    <p class="eyebrow">ainepadma.github.io</p>
-                    <h1>Ainepadma</h1>
-                    <p class="tagline">
-                        Personal hub for projects, notes, and experiments. Welcome to my
-                        corner of the web.
-                    </p>
-                    <div class="links">
-                        <a class="pill" href="mailto:Ainepadma24@gamil.com">Ainepadma24@gamil.com</a>
-                        <a class="pill" href="https://github.com/ainepadma" target="_blank" rel="noreferrer">
-                            GitHub Profile
-                        </a>
-                    </div>
-                </div>
-            </section>
-
-            <section class="info-panel">
-                <div class="info-header">
-                    <div class="info-title">Scrollable Info Bar</div>
-                    <div class="info-hint">Swipe or scroll horizontally</div>
-                </div>
-                <div class="scroll-track" aria-label="Scrollable info cards">
-                    <article class="scroll-card">
-                        <h3>Elite CS</h3>
-                        <p>Chin-Shiung Wu College of Southeast University.</p>
-                    </article>
-                    <article class="scroll-card">
-                        <h3>Liquid-Level-Detection</h3>
-                        <p>
-                            Monocular vision beverage cup measuring device using dual-model YOLOv5.
-                        </p>
-                        <p>
-                            <a href="https://github.com/ainepadma/Liquid-Level-Detection" target="_blank"
-                                rel="noreferrer">github.com/ainepadma/Liquid-Level-Detection</a>
-                        </p>
-                    </article>
-                    <article class="scroll-card">
-                        <h3>Contest Project</h3>
-                        <p>28th SEU Electronics Design Contest, Problem D (2026).</p>
-                    </article>
-                    <article class="scroll-card">
-                        <h3>Hardware Stack</h3>
-                        <p>MaixCAM PRO + STM32F103C8T6 + SSD1315 0.96" OLED.</p>
-                    </article>
-                    <article class="scroll-card">
-                        <h3>Vision Pipeline</h3>
-                        <p>Dual-model detection, IoU tracking, and liquid surface scoring.</p>
-                    </article>
-                    <article class="scroll-card">
-                        <h3>Data Link</h3>
-                        <p>UART streaming to STM32 for fusion and display.</p>
-                    </article>
-                    <article class="scroll-card">
-                        <h3>Current Sensing</h3>
-                        <p>INA240A1 + 100 mOhm shunt for real-time current readout.</p>
-                    </article>
-                    <article class="scroll-card">
-                        <h3>Add more</h3>
-                        <p>Drop extra notes, links, or milestones here.</p>
-                    </article>
-                </div>
-            </section>
-        </main>
+<section class="hero">
+    <div class="hero-media">
+        <img class="avatar" src="{{ site.avatar }}" alt="Ainepadma avatar" />
+        <div class="hero-stamp">Elite CS</div>
     </div>
-    <script>
-        (() => {
-            const root = document.documentElement;
-            const threshold = 60;
-            let ticking = false;
+    <div class="hero-body">
+        <p class="eyebrow">Chin-Shiung Wu College of Southeast University</p>
+        <h1 class="hero-title">{{ site.author }}</h1>
+        <p class="hero-subtitle">
+            Computer science student focused on vision systems and embedded hardware.
+        </p>
+        <div class="hero-actions">
+            <a class="btn" href="https://github.com/{{ site.github_username }}" target="_blank"
+                rel="noreferrer">GitHub</a>
+            <a class="btn ghost" href="mailto:{{ site.email }}">Email</a>
+        </div>
+    </div>
+</section>
 
-            const update = () => {
-                ticking = false;
-                root.classList.toggle("scrolled", window.scrollY > threshold);
-            };
-
-            const requestTick = () => {
-                if (!ticking) {
-                    ticking = true;
-                    window.requestAnimationFrame(update);
-                }
-            };
-
-            window.addEventListener("scroll", requestTick, { passive: true });
-            window.addEventListener("resize", requestTick);
-            window.addEventListener("load", update);
-        })();
-    </script>
-</body>
-
-</html>
+<section class="section">
+    <div class="section-header">
+        <h2>Featured Project</h2>
+        <span class="section-meta">2026</span>
+    </div>
+    <article class="project-card">
+        <div class="project-head">
+            <h3>Liquid-Level-Detection</h3>
+            <span class="project-badge">Vision System</span>
+        </div>
+        <p class="project-desc">
+            Monocular vision beverage cup measuring device for SEU Electronics Design Contest,
+            using dual-model YOLOv5 on MaixCAM PRO and STM32.
+        </p>
+        <a class="project-link" href="https://github.com/ainepadma/Liquid-Level-Detection" target="_blank"
+            rel="noreferrer">
+            github.com/ainepadma/Liquid-Level-Detection
+        </a>
+        <div class="tag-row">
+            <span class="tag">MaixCAM</span>
+            <span class="tag">YOLOv5</span>
+            <span class="tag">STM32</span>
+            <span class="tag">Computer Vision</span>
+        </div>
+    </article>
+</section>
