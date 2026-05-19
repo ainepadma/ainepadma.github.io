@@ -1,50 +1,645 @@
----
-layout: default
-title: Home
----
+<!doctype html>
+<html lang="en">
 
-<section class="hero">
-    <div class="hero-media">
-        <img class="avatar" src="{{ site.avatar }}" alt="Ainepadma avatar" />
-        <div class="hero-stamp">Elite CS</div>
-    </div>
-    <div class="hero-body">
-        <p class="eyebrow">Chin-Shiung Wu College of Southeast University</p>
-        <h1 class="hero-title">{{ site.author }}</h1>
-        <p class="hero-subtitle">
-            Computer science student focused on vision systems and embedded hardware.
-        </p>
-        <div class="hero-actions">
-            <a class="btn" href="https://github.com/{{ site.github_username }}" target="_blank"
-                rel="noreferrer">GitHub</a>
-            <a class="btn ghost" href="mailto:{{ site.email }}">Email</a>
-        </div>
-    </div>
-</section>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>Ainepadma | Home</title>
+    <meta name="description" content="Ainepadma personal site." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Syne:wght@600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        /* 主题颜色与全局变量 */
+        :root {
+            color-scheme: dark;
+            --bg: #0b0e13;
+            --panel: #141b26;
+            --card: #151d2a;
+            --text: #e7edf2;
+            --muted: #9aa4b2;
+            --accent: #f5b351;
+            --accent-2: #5ad2c3;
+            --line: #222c3a;
+            --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+        }
 
-<section class="section">
-    <div class="section-header">
-        <h2>Featured Project</h2>
-        <span class="section-meta">2026</span>
+        /* 基础重置 */
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 页面背景与字体 */
+        body {
+            font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+            background:
+                radial-gradient(1200px 600px at 12% -10%, rgba(245, 179, 81, 0.2), transparent 60%),
+                radial-gradient(900px 500px at 90% 10%, rgba(90, 210, 195, 0.18), transparent 55%),
+                var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(120deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)),
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.05), transparent 60%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* 链接基础样式 */
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* 页面容器：控制整体宽度与间距 */
+        .page {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 32px 6vw 80px;
+            display: grid;
+            gap: 32px;
+        }
+
+        /* 顶部导航：吸附触发区域 */
+        .nav-shell {
+            position: sticky;
+            top: 0;
+            z-index: 4;
+            height: 0;
+        }
+
+        .nav-trigger {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 16px;
+        }
+
+        /* 顶部导航：站点名称与主导航 */
+        .site-nav {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 16px 22px;
+            border-radius: 18px;
+            background: rgba(16, 22, 32, 0.75);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(14px);
+            position: absolute;
+            top: 16px;
+            left: 0;
+            right: 0;
+            transform: translateY(-140%);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.28s ease, opacity 0.2s ease;
+        }
+
+        .nav-shell:hover .site-nav,
+        .nav-shell:focus-within .site-nav {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .brand {
+            display: grid;
+            gap: 4px;
+        }
+
+        .brand-title {
+            font-family: "Syne", sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 0.02em;
+        }
+
+        .brand-meta {
+            font-size: 0.72rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-links a {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--muted);
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            transition: color 0.2s ease, background 0.2s ease, border 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+            background: rgba(90, 210, 195, 0.12);
+            border-color: rgba(90, 210, 195, 0.35);
+        }
+
+        /* 主体内容容器 */
+        .content {
+            display: grid;
+            gap: 36px;
+        }
+
+        /* 个人信息区：头像与简介 */
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(200px, 260px) 1fr;
+            gap: 28px;
+            align-items: center;
+            padding: 28px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(18, 25, 36, 0.92), rgba(14, 20, 30, 0.95));
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            animation: rise 0.9s ease;
+        }
+
+        .hero-media {
+            display: grid;
+            gap: 14px;
+            justify-items: start;
+        }
+
+        .avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 24px;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-stamp {
+            font-size: 0.78rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .eyebrow {
+            font-size: 0.8rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin: 0 0 10px;
+        }
+
+        .hero-title {
+            font-family: "Syne", sans-serif;
+            font-size: clamp(2.3rem, 4vw, 3.4rem);
+            margin: 0 0 8px;
+        }
+
+        .hero-subtitle {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .hero-body {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .hero-social {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .social-link {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            border: 1px solid rgba(90, 210, 195, 0.25);
+            background: rgba(16, 22, 32, 0.7);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border 0.2s ease,
+                color 0.2s ease;
+        }
+
+        .social-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 26px rgba(0, 0, 0, 0.35);
+            background: rgba(245, 179, 81, 0.12);
+            border-color: rgba(245, 179, 81, 0.55);
+            color: var(--accent);
+        }
+
+        .social-icon {
+            width: 22px;
+            height: 22px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .toast {
+            position: fixed;
+            right: 28px;
+            bottom: 28px;
+            background: rgba(16, 22, 32, 0.92);
+            color: var(--text);
+            border: 1px solid rgba(90, 210, 195, 0.35);
+            border-radius: 14px;
+            padding: 12px 16px;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .toast--show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast__text {
+            font-size: 0.85rem;
+            letter-spacing: 0.02em;
+        }
+
+        /* 项目区块标题 */
+        .section {
+            display: grid;
+            gap: 18px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .section-header h2 {
+            font-family: "Syne", sans-serif;
+            margin: 0;
+            font-size: 1.45rem;
+        }
+
+        .section-meta {
+            font-size: 0.8rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        /* 项目卡片：展示主要项目 */
+        .project-card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 22px;
+            display: grid;
+            gap: 14px;
+            box-shadow: var(--shadow);
+        }
+
+        .project-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .project-head h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .project-badge {
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: rgba(90, 210, 195, 0.15);
+            color: var(--accent-2);
+            font-size: 0.78rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            border: 1px solid rgba(90, 210, 195, 0.4);
+        }
+
+        .project-desc {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .project-link {
+            color: var(--accent-2);
+            font-weight: 600;
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            font-size: 0.78rem;
+            color: var(--muted);
+            border: 1px solid var(--line);
+            padding: 6px 10px;
+            border-radius: 999px;
+        }
+
+        /* 页脚区域 */
+        .site-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-top: 1px solid var(--line);
+            padding-top: 18px;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        .site-footer a {
+            color: var(--accent-2);
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-media {
+                justify-items: center;
+            }
+
+            .hero-social {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .page {
+                padding: 24px 6vw 60px;
+            }
+
+            .nav-links {
+                gap: 6px;
+            }
+
+            .nav-links a {
+                letter-spacing: 0.12em;
+            }
+
+            .hero {
+                padding: 22px;
+            }
+
+            .toast {
+                left: 16px;
+                right: 16px;
+                bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 页面容器：控制整体宽度与间距 -->
+    <div class="page">
+        <!-- 顶部导航：站点名称与主导航链接 -->
+        <div class="nav-shell">
+            <div class="nav-trigger" aria-hidden="true"></div>
+            <nav class="site-nav">
+                <div class="brand">
+                    <a class="brand-title" href="#">Ainepadma</a>
+                    <span class="brand-meta">ainepadma.github.io</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#">About</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Projects</a>
+                    <a href="#">Tags</a>
+                    <a href="#">Archive</a>
+                    <a href="#">Search</a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- 主体内容：头像、名称与项目展示 -->
+        <main class="content">
+            <!-- 个人信息区：GitHub 头像与姓名 -->
+            <section class="hero">
+                <div class="hero-media">
+                    <img class="avatar" src="https://github.com/ainepadma.png" alt="Ainepadma avatar" />
+                    <div class="hero-title">Ainepadma</div>
+                </div>
+                <div class="hero-body">
+                    <h1 class="hero-stamp">Elite CS</h1>
+                    <h1 class="hero-stamp">Chin-Shiung Wu College of Southeast University</h1>
+                    <p class="hero-subtitle">
+                        Computer science student focused on hardware and application software solutions.</p>
+                    <div class="hero-social">
+                        <a class="social-link" href="https://github.com/ainepadma" aria-label="GitHub">
+                            <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3"></path>
+                                <path
+                                    d="M16 22v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                                </path>
+                            </svg>
+                        </a>
+                        <a class="social-link" href="https://www.facebook.com/profile.php?id=61578713425728"
+                            aria-label="Facebook">
+                            <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z">
+                                </path>
+                            </svg>
+                        </a>
+                        <a class="social-link" href="https://www.xiaohongshu.com/user/profile/65c2f00e000000001101ba14"
+                            aria-label="Xiaohongshu">
+                            <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M2 3h6a4 4 0 0 1 4 4v14a4 4 0 0 0-4-4H2z"></path>
+                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a4 4 0 0 1 4-4h6z"></path>
+                            </svg>
+                        </a>
+                        <a class="social-link" data-email-link data-email="Ainepadma24@gmail.com" href="#"
+                            aria-label="Gmail">
+                            <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M4 6h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z">
+                                </path>
+                                <path d="M22 8l-10 7L2 8"></path>
+                                <path d="M6 18l6-6 6 6"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 项目区：展示当前主项目 -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>Featured Project</h2>
+                    <span class="section-meta">2026</span>
+                </div>
+                <article class="project-card">
+                    <div class="project-head">
+                        <h3>Liquid-Level-Detection</h3>
+                        <span class="project-badge">Vision System</span>
+                    </div>
+                    <p class="project-desc">
+                        Monocular vision beverage cup measuring device for SEU Electronics Design Contest,
+                        using dual-model YOLOv5 on MaixCAM PRO and STM32.
+                    </p>
+                    <a class="project-link" href="https://github.com/ainepadma/Liquid-Level-Detection" target="_blank"
+                        rel="noreferrer">
+                        github.com/ainepadma/Liquid-Level-Detection
+                    </a>
+                    <div class="tag-row">
+                        <span class="tag">MaixCAM</span>
+                        <span class="tag">YOLOv5</span>
+                        <span class="tag">STM32</span>
+                        <span class="tag">Computer Vision</span>
+                    </div>
+                </article>
+            </section>
+        </main>
+
+        <!-- 页脚：版权与外链 -->
+        <footer class="site-footer">
+            <span>Copyright 2026 Ainepadma</span>
+            <a href="https://github.com/ainepadma" target="_blank" rel="noreferrer">GitHub</a>
+        </footer>
     </div>
-    <article class="project-card">
-        <div class="project-head">
-            <h3>Liquid-Level-Detection</h3>
-            <span class="project-badge">Vision System</span>
-        </div>
-        <p class="project-desc">
-            Monocular vision beverage cup measuring device for SEU Electronics Design Contest,
-            using dual-model YOLOv5 on MaixCAM PRO and STM32.
-        </p>
-        <a class="project-link" href="https://github.com/ainepadma/Liquid-Level-Detection" target="_blank"
-            rel="noreferrer">
-            github.com/ainepadma/Liquid-Level-Detection
-        </a>
-        <div class="tag-row">
-            <span class="tag">MaixCAM</span>
-            <span class="tag">YOLOv5</span>
-            <span class="tag">STM32</span>
-            <span class="tag">Computer Vision</span>
-        </div>
-    </article>
-</section>
+
+    <div class="toast" id="email-toast" role="status" aria-live="polite" aria-atomic="true">
+        <span class="toast__text">Email copied</span>
+    </div>
+
+    <script>
+        (() => {
+            const emailLink = document.querySelector("[data-email-link]");
+            if (!emailLink) {
+                return;
+            }
+
+            const email = emailLink.getAttribute("data-email") || "";
+            const mailto = email ? `mailto:${email}` : "#";
+            emailLink.setAttribute("href", mailto);
+
+            const isMobile = /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
+
+            const toast = document.getElementById("email-toast");
+            let toastTimer = null;
+
+            const showToast = (message) => {
+                if (!toast) {
+                    return;
+                }
+
+                const textEl = toast.querySelector(".toast__text");
+                if (textEl) {
+                    textEl.textContent = message;
+                }
+
+                toast.classList.add("toast--show");
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => {
+                    toast.classList.remove("toast--show");
+                }, 1600);
+            };
+
+            const fallbackCopy = (text) => {
+                const temp = document.createElement("textarea");
+                temp.value = text;
+                temp.setAttribute("readonly", "");
+                temp.style.position = "absolute";
+                temp.style.left = "-9999px";
+                document.body.appendChild(temp);
+                temp.select();
+                try {
+                    document.execCommand("copy");
+                } catch (err) {
+                    // no-op
+                }
+                document.body.removeChild(temp);
+            };
+
+            emailLink.addEventListener("click", (event) => {
+                if (!email) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                const afterCopy = () => {
+                    showToast("Email copied");
+                    if (isMobile) {
+                        setTimeout(() => {
+                            window.location.href = mailto;
+                        }, 160);
+                    }
+                };
+
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(email).then(afterCopy).catch(() => {
+                        fallbackCopy(email);
+                        afterCopy();
+                    });
+                } else {
+                    fallbackCopy(email);
+                    afterCopy();
+                }
+            });
+        })();
+    </script>
+</body>
+
+</html>
