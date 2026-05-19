@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>Ainepadma | Solutions</title>
+    <meta name="description"
+        content="Solutions by Ainepadma — embedded vision systems hardware-software integrated projects." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #0b0e13;
+            --panel: #141b26;
+            --text: #e7edf2;
+            --muted: #9aa4b2;
+            --accent: #f5b351;
+            --accent-2: #5ad2c3;
+            --line: #222c3a;
+            --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+            --nav-height: 84px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+            background:
+                radial-gradient(1200px 600px at 12% -10%, rgba(245, 179, 81, 0.2), transparent 60%),
+                radial-gradient(900px 500px at 90% 10%, rgba(90, 210, 195, 0.18), transparent 55%),
+                var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(120deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)),
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.05), transparent 60%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .page {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 6vw 80px;
+            padding-top: calc(32px + var(--nav-height));
+            display: grid;
+            gap: 32px;
+        }
+
+        /* ── navigation ── */
+        .nav-shell {
+            position: relative;
+            z-index: 40;
+            height: 0;
+        }
+
+        .nav-trigger {
+            display: none;
+        }
+
+        .site-nav {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 14px 6vw;
+            background: linear-gradient(135deg, rgba(18, 25, 36, 0.92), rgba(14, 20, 30, 0.95));
+            border-bottom: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            transform: translateY(0);
+            opacity: 1;
+            transition: transform 0.25s ease, opacity 0.2s ease;
+            z-index: 50;
+        }
+
+        .site-nav--hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .brand {
+            display: grid;
+            gap: 4px;
+        }
+
+        .brand-title {
+            font-family: "Syne", sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-links a {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--muted);
+            padding: 7px 14px;
+            border-radius: 999px;
+            border: none;
+            background: transparent;
+            transition: color 0.2s ease, text-shadow 0.25s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus-visible {
+            color: var(--text);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75),
+                0 0 46px rgba(90, 210, 195, 0.6);
+        }
+
+        .nav-links .nav-active {
+            color: var(--text);
+            text-shadow:
+                0 0 6px rgba(90, 210, 195, 0.6),
+                0 0 18px rgba(90, 210, 195, 0.5);
+        }
+
+        /* ── page header ── */
+        .page-header {
+            display: grid;
+            gap: 6px;
+            margin-bottom: 4px;
+            animation: rise 0.8s ease;
+        }
+
+        .page-eyebrow {
+            font-size: 0.78rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        .page-title {
+            font-family: "Syne", sans-serif;
+            font-size: clamp(2rem, 3.5vw, 2.8rem);
+            margin: 0;
+            line-height: 1.05;
+        }
+
+        .page-subtitle {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            max-width: 64ch;
+        }
+
+        /* ── solution list ── */
+        .solution-list {
+            display: grid;
+            gap: 0;
+            animation: rise 0.8s ease 0.06s both;
+        }
+
+        .solution-row {
+            display: grid;
+            gap: 14px;
+            padding: 26px 0;
+            border-bottom: 1px solid var(--line);
+            transition: opacity 0.2s ease;
+        }
+
+        .solution-row:first-child {
+            border-top: 1px solid var(--line);
+        }
+
+        .solution-row:hover .solution-title {
+            color: var(--accent-2);
+        }
+
+        .solution-head {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .solution-title {
+            font-family: "Syne", sans-serif;
+            font-size: 1.25rem;
+            margin: 0;
+            transition: color 0.2s ease;
+            line-height: 1.2;
+        }
+
+        .solution-badge {
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(90, 210, 195, 0.12);
+            color: var(--accent-2);
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border: 1px solid rgba(90, 210, 195, 0.35);
+        }
+
+        .solution-desc {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.92rem;
+            line-height: 1.7;
+        }
+
+        .solution-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent-2);
+            transition: color 0.2s ease;
+            margin-top: 2px;
+        }
+
+        .solution-link:hover {
+            color: var(--text);
+        }
+
+        .solution-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .solution-tag {
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            border: 1px solid var(--line);
+            padding: 3px 8px;
+            border-radius: 999px;
+        }
+
+        /* ── footer ── */
+        .site-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-top: 1px solid var(--line);
+            padding-top: 18px;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        .site-footer a {
+            color: var(--accent-2);
+            transition: color 0.2s ease, text-shadow 0.25s ease;
+        }
+
+        .site-footer a:hover,
+        .site-footer a:focus-visible {
+            color: var(--text);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75),
+                0 0 46px rgba(90, 210, 195, 0.6);
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .page {
+                padding: 0 6vw 60px;
+                padding-top: calc(24px + var(--nav-height));
+            }
+
+            .nav-links {
+                gap: 6px;
+            }
+
+            .nav-links a {
+                letter-spacing: 0.12em;
+            }
+
+            .solution-row {
+                padding: 20px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <!-- ── navigation ── -->
+        <div class="nav-shell">
+            <div class="nav-trigger" aria-hidden="true"></div>
+            <nav class="site-nav">
+                <div class="brand">
+                    <a class="brand-title" href="https://ainepadma.github.io/">Ainepadma</a>
+                </div>
+                <div class="nav-links">
+                    <a href="https://ainepadma.github.io/about">About</a>
+                    <a href="https://ainepadma.github.io/blog">Blog</a>
+                    <a href="https://ainepadma.github.io/creative-projects">Creative Projects</a>
+                    <a class="nav-active" href="https://ainepadma.github.io/solutions">Solutions</a>
+                </div>
+            </nav>
+        </div>
+
+        <main class="content">
+            <header class="page-header">
+                <p class="page-eyebrow">Solutions</p>
+                <h1 class="page-title">Engineering Systems</h1>
+                <p class="page-subtitle">
+                    End-to-end hardware-software integrated solutions — from sensor to display,
+                    from algorithm to communication protocol.
+                </p>
+            </header>
+
+            <div class="solution-list">
+                <div class="solution-row">
+                    <div class="solution-head">
+                        <h2 class="solution-title">Liquid-Level-Detection</h2>
+                        <span class="solution-badge">Vision System</span>
+                    </div>
+                    <p class="solution-desc">
+                        Problem D of the 28th Electronics Design Contest of Southeast University: A beverage cup
+                        measuring device based on monocular vision.
+                    </p>
+                    <p class="solution-desc">
+                        This project features a monocular vision system and STM32 communication pipeline. I implemented
+                        a dual-model YOLOv5 detection framework with IoU-based tracking, EMA smoothing, and a custom
+                        liquid surface detection algorithm using blob analysis and gradient scoring. On the STM32 side,
+                        I established a reliable UART communication protocol at 115200 baud for real-time vision data
+                        transmission, fused with INA240A1 current sensor readings, and drove an SSD1315 OLED display
+                        for status output. The integrated pipeline processes high-resolution camera frames and delivers
+                        stable measurement results every three frames.
+                    </p>
+                    <div class="solution-tags">
+                        <span class="solution-tag">MaixCAM</span>
+                        <span class="solution-tag">YOLOv5</span>
+                        <span class="solution-tag">STM32</span>
+                        <span class="solution-tag">Computer Vision</span>
+                        <span class="solution-tag">UART</span>
+                        <span class="solution-tag">Embedded</span>
+                    </div>
+                    <a class="solution-link" href="https://github.com/ainepadma/Liquid-Level-Detection" target="_blank"
+                        rel="noreferrer">
+                        View on GitHub →
+                    </a>
+                </div>
+            </div>
+        </main>
+
+        <footer class="site-footer">
+            <span>Copyright 2026 Ainepadma</span>
+            <a href="https://github.com/ainepadma" target="_blank" rel="noreferrer">GitHub</a>
+        </footer>
+    </div>
+
+    <script>
+        (() => {
+            const nav = document.querySelector(".site-nav");
+            if (!nav) return;
+            let lastScrollY = window.scrollY;
+            let ticking = false;
+            const showNav = () => nav.classList.remove("site-nav--hidden");
+            const hideNav = () => nav.classList.add("site-nav--hidden");
+            const onScroll = () => {
+                const y = window.scrollY;
+                if (y <= 8) showNav();
+                else if (y > lastScrollY + 6) hideNav();
+                else if (y < lastScrollY - 6) showNav();
+                lastScrollY = y;
+                ticking = false;
+            };
+            window.addEventListener("scroll", () => {
+                if (!ticking) { window.requestAnimationFrame(onScroll); ticking = true; }
+            }, { passive: true });
+            window.addEventListener("mousemove", (e) => { if (e.clientY <= 24) showNav(); });
+            window.addEventListener("touchstart", (e) => {
+                const t = e.touches && e.touches[0]; if (t && t.clientY <= 24) showNav();
+            }, { passive: true });
+            showNav();
+        })();
+    </script>
+</body>
+
+</html>

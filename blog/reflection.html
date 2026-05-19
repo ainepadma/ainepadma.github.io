@@ -1,0 +1,908 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>Reflections on a One-Week Electronics Design Competition — Ainepadma</title>
+    <meta name="description"
+        content="Problem D, 28th Electronics Design Contest of Southeast University. Seven days of embedded vision, YOLOv5, STM32, and systems integration." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #0b0e13;
+            --panel: #141b26;
+            --text: #e7edf2;
+            --muted: #9aa4b2;
+            --accent: #f5b351;
+            --accent-2: #5ad2c3;
+            --line: #222c3a;
+            --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+            --nav-height: 84px;
+            --toc-width: 200px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+            background:
+                radial-gradient(1200px 600px at 12% -10%, rgba(245, 179, 81, 0.2), transparent 60%),
+                radial-gradient(900px 500px at 90% 10%, rgba(90, 210, 195, 0.18), transparent 55%),
+                var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(120deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)),
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.05), transparent 60%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* ── progress bar ── */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            z-index: 60;
+            width: 0%;
+            transition: width 0.08s linear;
+        }
+
+        /* ── navigation (shared) ── */
+        .nav-shell {
+            position: relative;
+            z-index: 40;
+            height: 0;
+        }
+
+        .nav-trigger {
+            display: none;
+        }
+
+        .site-nav {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 14px 6vw;
+            border-radius: 0;
+            background: linear-gradient(135deg, rgba(18, 25, 36, 0.92), rgba(14, 20, 30, 0.95));
+            border-bottom: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            transform: translateY(0);
+            opacity: 1;
+            transition: transform 0.25s ease, opacity 0.2s ease;
+            z-index: 50;
+        }
+
+        .site-nav--hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .brand {
+            display: grid;
+            gap: 4px;
+        }
+
+        .brand-title {
+            font-family: "Syne", sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-links a {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--muted);
+            padding: 7px 14px;
+            border-radius: 999px;
+            border: none;
+            background: transparent;
+            transition: color 0.2s ease, text-shadow 0.25s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus-visible {
+            color: var(--text);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75),
+                0 0 46px rgba(90, 210, 195, 0.6);
+        }
+
+        .nav-links .nav-active {
+            color: var(--text);
+            text-shadow:
+                0 0 6px rgba(90, 210, 195, 0.6),
+                0 0 18px rgba(90, 210, 195, 0.5);
+        }
+
+        /* ── page layout ── */
+        .page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 6vw 80px;
+            padding-top: calc(32px + var(--nav-height));
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+        }
+
+        /* ── article header ── */
+        .article-header {
+            display: grid;
+            gap: 10px;
+            animation: rise 0.8s ease;
+            max-width: 740px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .article-eyebrow {
+            font-size: 0.78rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        .article-title {
+            font-family: "Syne", sans-serif;
+            font-size: clamp(2.4rem, 4vw, 3.2rem);
+            line-height: 1.05;
+            margin: 0;
+        }
+
+        .article-subtitle {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.75rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .meta-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 999px;
+            background: var(--accent-2);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent-2);
+            margin-bottom: 6px;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--text);
+        }
+
+        /* ── two-column body area ── */
+        .article-shell {
+            display: grid;
+            grid-template-columns: var(--toc-width) minmax(0, 740px);
+            gap: 48px;
+            justify-content: center;
+            animation: rise 0.8s ease 0.06s both;
+        }
+
+        /* ── TOC sidebar ── */
+        .toc-sidebar {
+            position: sticky;
+            top: calc(var(--nav-height) + 28px);
+            align-self: start;
+            max-height: calc(100vh - var(--nav-height) - 60px);
+            overflow-y: auto;
+            display: grid;
+            gap: 6px;
+        }
+
+        .toc-title {
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin: 0 0 4px;
+        }
+
+        .toc-link {
+            font-size: 0.82rem;
+            color: var(--muted);
+            padding: 3px 0;
+            border-left: 2px solid transparent;
+            padding-left: 10px;
+            transition: color 0.2s ease, border-color 0.2s ease;
+            line-height: 1.4;
+        }
+
+        .toc-link:hover,
+        .toc-link.toc-active {
+            color: var(--accent-2);
+            border-left-color: var(--accent-2);
+        }
+
+        /* ── article body ── */
+        .article-body {
+            display: grid;
+            gap: 18px;
+            font-size: 1rem;
+            line-height: 1.75;
+            min-width: 0;
+        }
+
+        .article-body section {
+            scroll-margin-top: calc(var(--nav-height) + 16px);
+        }
+
+        .article-body p {
+            margin: 0;
+        }
+
+        .article-body h2 {
+            font-family: "Syne", sans-serif;
+            font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+            margin: 26px 0 6px;
+        }
+
+        .article-body h3 {
+            margin: 16px 0 6px;
+            font-size: 1.1rem;
+        }
+
+        .article-body strong {
+            color: var(--text);
+        }
+
+        .article-body ul,
+        .article-body ol {
+            margin: 0;
+            padding-left: 20px;
+            color: var(--muted);
+            display: grid;
+            gap: 8px;
+        }
+
+        .article-body li {
+            color: var(--muted);
+        }
+
+        .article-body code {
+            font-family: "IBM Plex Mono", "Courier New", monospace;
+            font-size: 0.92em;
+            background: rgba(16, 22, 32, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            padding: 2px 6px;
+        }
+
+        .article-quote {
+            margin: 8px 0 0;
+            padding-left: 16px;
+            border-left: 2px solid rgba(90, 210, 195, 0.6);
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        .article-divider {
+            border: none;
+            height: 1px;
+            background: var(--line);
+            margin: 4px 0 6px;
+        }
+
+        .table-wrap {
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            overflow-x: auto;
+            background: rgba(10, 14, 20, 0.6);
+        }
+
+        .table-wrap table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+            min-width: 620px;
+        }
+
+        .table-wrap th,
+        .table-wrap td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--line);
+            vertical-align: top;
+        }
+
+        .table-wrap th {
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text);
+        }
+
+        .table-wrap tr:last-child td {
+            border-bottom: none;
+        }
+
+        .signoff {
+            font-style: italic;
+            color: var(--muted);
+        }
+
+        /* ── footer ── */
+        .site-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-top: 1px solid var(--line);
+            padding-top: 18px;
+            color: var(--muted);
+            font-size: 0.85rem;
+            max-width: 740px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .site-footer a {
+            color: var(--accent-2);
+            transition: color 0.2s ease, text-shadow 0.25s ease;
+        }
+
+        .site-footer a:hover,
+        .site-footer a:focus-visible {
+            color: var(--text);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75),
+                0 0 46px rgba(90, 210, 195, 0.6);
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── responsive ── */
+        @media (max-width: 960px) {
+            .article-shell {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .toc-sidebar {
+                position: static;
+                max-height: none;
+                display: none;
+            }
+
+            .toc-sidebar.is-open {
+                display: grid;
+            }
+
+            .toc-toggle {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 0.78rem;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--accent-2);
+                background: none;
+                border: 1px solid var(--line);
+                border-radius: 999px;
+                padding: 8px 16px;
+                cursor: pointer;
+                justify-self: start;
+                transition: color 0.2s ease, border-color 0.2s ease;
+                margin-bottom: 8px;
+            }
+
+            .toc-toggle:hover {
+                color: var(--text);
+                border-color: var(--accent-2);
+            }
+        }
+
+        @media (min-width: 961px) {
+            .toc-toggle {
+                display: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .page {
+                padding: 0 6vw 60px;
+                padding-top: calc(24px + var(--nav-height));
+            }
+
+            .nav-links {
+                gap: 6px;
+            }
+
+            .nav-links a {
+                letter-spacing: 0.12em;
+            }
+
+            .article-title {
+                font-size: clamp(2rem, 6vw, 2.6rem);
+            }
+
+            .article-body {
+                font-size: 0.98rem;
+            }
+
+            .table-wrap table {
+                min-width: 460px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ── reading progress bar ── -->
+    <div class="progress-bar" id="progress-bar" aria-hidden="true"></div>
+
+    <div class="page">
+        <!-- ── navigation ── -->
+        <div class="nav-shell">
+            <div class="nav-trigger" aria-hidden="true"></div>
+            <nav class="site-nav">
+                <div class="brand">
+                    <a class="brand-title" href="https://ainepadma.github.io/">Ainepadma</a>
+                </div>
+                <div class="nav-links">
+                    <a href="https://ainepadma.github.io/about">About</a>
+                    <a class="nav-active" href="https://ainepadma.github.io/blog">Blog</a>
+                    <a href="https://ainepadma.github.io/creative-projects">Creative Projects</a>
+                    <a href="https://ainepadma.github.io/solutions">Solutions</a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- ── article header ── -->
+        <header class="article-header">
+            <a class="back-link" href="https://ainepadma.github.io/blog">← Blog</a>
+            <p class="article-eyebrow">Long-form reflection</p>
+            <h1 class="article-title">Reflections on a One-Week Electronics Design Competition</h1>
+            <p class="article-subtitle">
+                Problem D, 28th Electronics Design Contest of Southeast University: A Beverage Cup Measuring Device
+                Based on Monocular Vision.
+            </p>
+            <div class="article-meta">
+                <span>May 2026</span>
+                <span class="meta-dot" aria-hidden="true"></span>
+                <span>Southeast University</span>
+            </div>
+        </header>
+
+        <!-- ── body + TOC ── -->
+        <div class="article-shell">
+            <!-- TOC toggle (mobile only) -->
+            <button class="toc-toggle" id="toc-toggle" type="button" aria-expanded="false" aria-controls="toc-sidebar">☰
+                Contents</button>
+
+            <!-- TOC sidebar -->
+            <nav class="toc-sidebar" id="toc-sidebar" aria-label="Table of contents">
+                <p class="toc-title">Contents</p>
+                <a class="toc-link" href="#s1">1. From Zero to One</a>
+                <a class="toc-link" href="#s2">2. The Tech Stack</a>
+                <a class="toc-link" href="#s3">3. Liquid Surface Detection</a>
+                <a class="toc-link" href="#s4">4. Dual-Model Fusion</a>
+                <a class="toc-link" href="#s5">5. Hardware War Stories</a>
+                <a class="toc-link" href="#s6">6. AI-Assisted Development</a>
+                <a class="toc-link" href="#s7">7. Collaboration &amp; Management</a>
+                <a class="toc-link" href="#s8">8. Summary &amp; Outlook</a>
+            </nav>
+
+            <!-- article content -->
+            <article class="article-body" id="article-body">
+                <p class="article-quote">
+                    Seven days of competition compressed a semester's worth of technical density into a single week.
+                </p>
+                <hr class="article-divider" />
+
+                <section id="s1">
+                    <h2>1. From Zero to One: How Much Can Be Done in Seven Days</h2>
+                    <p>
+                        Seven days — transforming a seemingly simple problem ("measure the height of a beverage in a
+                        cup using a single camera") from a paper proposal into a reliably functioning embedded vision
+                        system. This was, without a doubt, the most technically dense period of my undergraduate
+                        journey.
+                    </p>
+                    <p>
+                        Looking back, we started with nothing more than a MaixCAM PRO development board, a GC4653 camera
+                        sensor, an STM32 minimal system board, and a pile of Dupont wires. We ended up delivering a
+                        complete device integrating <strong>dual-model YOLOv5 object detection + liquid surface
+                            recognition + reference color extraction + UART cross-chip communication + real-time OLED
+                            display</strong>. Glancing at the project file structure, the <code>launch/</code>
+                        directory evolved from <code>v1.0.1</code> all the way to <code>v1.3.6</code> — every version
+                        number marking a late-night debugging breakthrough.
+                    </p>
+                </section>
+
+                <section id="s2">
+                    <h2>2. The Breadth of the Tech Stack: Vision, Embedded, Communication — None Optional</h2>
+                    <p>
+                        The difficulty of this problem lay not in drilling deep into any single domain, but in
+                        <strong>multi-disciplinary system integration</strong>:
+                    </p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Layer</th>
+                                    <th>Technology</th>
+                                    <th>Pitfalls Encountered</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Perception</strong></td>
+                                    <td>GC4653 2560×1440 image capture</td>
+                                    <td>High-res VI pool allocation failure — Camera must be initialized before YOLO
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Algorithm</strong></td>
+                                    <td>Dual-model YOLOv5 inference, liquid surface gradient detection, EMA smoothing
+                                        &amp; locking</td>
+                                    <td>Model A/B confidence fusion weights tuned across 20+ parameter sets</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Communication</strong></td>
+                                    <td>MaixCAM UART → STM32 serial reception</td>
+                                    <td>Frame synchronization for CSV parsing at 115200 baud</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Actuation</strong></td>
+                                    <td>STM32 ADC sampling (INA240A1 current) + SSD1315 OLED display</td>
+                                    <td>Current sampling noise filtering</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>
+                        The deepest lesson: <strong>system integration is far harder than any individual
+                            algorithm</strong>. Getting YOLOv5 running took only half a day. Getting the detection
+                        results to flow reliably over UART to the STM32 and render correctly on a 0.96-inch OLED took
+                        two full days. Any subtle deviation in one link is magnified in an end-to-end system.
+                    </p>
+                </section>
+
+                <section id="s3">
+                    <h2>3. The Algorithmic Heart: Liquid Surface Detection Was the Real Challenge</h2>
+                    <p>
+                        Object detection (finding cups/bottles with YOLO) was actually the easiest part — the model was
+                        pre-trained, just tune the parameters. The real challenge was <strong>pinpointing the exact
+                            liquid surface inside the cup</strong>.
+                    </p>
+                    <p>This went through multiple rounds of trial and error:</p>
+                    <ol>
+                        <li><strong>Canny edge detection approach</strong> (<code>core/edge_detect.py</code>) —
+                            completely unreliable under varying lighting; abandoned.</li>
+                        <li><strong>Single blob detection</strong> — cup patterns and shadows produced overwhelming
+                            false positives.</li>
+                        <li><strong>Final approach</strong>: within the lower-half ROI of the object bounding box, score
+                            every row across four dimensions — gradient strength + color similarity + above/below
+                            contrast + gradient direction bonus — apply weighted scoring, then lock the result after 8
+                            stable frames.</li>
+                    </ol>
+                    <p>
+                        This algorithm consumed nearly 60% of total development time from conception to stable
+                        operation. The takeaway: <strong>a seemingly intuitive problem (the human eye instantly tells
+                            where the water surface is) often demands a mountain of engineering tricks when implemented
+                            in computer vision</strong>.
+                    </p>
+                </section>
+
+                <section id="s4">
+                    <h2>4. Lessons from Dual-Model Fusion</h2>
+                    <p>Running two YOLOv5 models in parallel:</p>
+                    <ul>
+                        <li>Model A (custom 2-class): high precision, limited generalization</li>
+                        <li>Model B (COCO-pretrained 80-class): good generalization, lower confidence</li>
+                    </ul>
+                    <p>
+                        Their fusion was never a simple weighted average. We designed a
+                        <strong>candidate scoring system</strong> (confidence weight 5.0 + center proximity 2.0 +
+                        previous-frame proximity 4.0 + liquid-level proximity 3.0), essentially encoding temporal
+                        information and task priors into the fusion logic. This drove home a crucial insight:
+                        <strong>on resource-constrained edge devices, algorithmic competition is not about model size —
+                            it's about how efficiently you inject domain knowledge into the inference pipeline</strong>.
+                    </p>
+                </section>
+
+                <section id="s5">
+                    <h2>5. Hardware War Stories</h2>
+                    <p>A few unforgettable hardware-level issues:</p>
+                    <ol>
+                        <li><strong>Camera initialization order:</strong> loading the YOLO model before initializing the
+                            Camera caused the 2560×1440 VI pool (~16.6 MB) allocation to fail with
+                            <code>_create_vb_pool failed, id -2</code>. The NPU's shared memory was already consumed by
+                            model weights. The fix was trivial — swap two lines of code — but isolating this bug took an
+                            entire afternoon.
+                        </li>
+                        <li><strong>Display resolution mismatch:</strong>
+                            <code>img.resize(disp.width(), disp.height())</code> must be called before
+                            <code>disp.show()</code>, otherwise the JPEG encoder's VB pool overflows with
+                            <code>convert format failed</code>. A classic embedded Linux memory management gotcha.
+                        </li>
+                        <li><strong>Lens selection:</strong> the 2.8–12mm variant of the JY-SDM12 proved far more
+                            suitable than the 6.0–22mm for desktop scenarios at a 20–50 cm working distance. Hardware
+                            selection cannot rely solely on spec sheets — it must be tested against actual workspace
+                            conditions.</li>
+                    </ol>
+                    <p>
+                        The common thread: <strong>error messages are separated from their root causes by multiple
+                            layers of abstraction</strong>. On PC, we take transparent error stacks for granted. On
+                        embedded platforms, every step is running bare-metal.
+                    </p>
+                </section>
+
+                <section id="s6">
+                    <h2>6. The New Paradigm of AI-Assisted Development</h2>
+                    <p>
+                        This project used AI coding assistants (DeepSeek V4 Pro / GPT-5.2-Codex) throughout, consuming
+                        an estimated 400–500 million cumulative tokens. That's not a cold, impersonal number — it
+                        represents a fundamentally new way of developing:
+                    </p>
+                    <ul>
+                        <li><strong>Rapid prototyping:</strong> from idea to runnable code, AI dramatically shortened
+                            "typing time."</li>
+                        <li><strong>Cross-domain knowledge bridging:</strong> when a vision algorithm engineer needed to
+                            write an STM32 ADC driver, AI served as an instant translator.</li>
+                        <li><strong>Debugging acceleration:</strong> throw error logs at the AI, and it often pinpoints
+                            the root cause quickly (for example, the VI pool allocation issue above).</li>
+                    </ul>
+                    <p>
+                        But clear-eyed honesty is required: <strong>AI cannot replace systems design judgment</strong>.
+                        When to use dual models, how to design the four-dimensional liquid surface scoring system, what
+                        IoU locking threshold to choose — these decisions still depend on deep understanding of the
+                        problem. AI is an amplifier, not a replacement.
+                    </p>
+                </section>
+
+                <section id="s7">
+                    <h2>7. Collaboration &amp; Project Management</h2>
+                    <p>
+                        Although I competed solo, the engineering rigor of this README — system architecture diagrams,
+                        communication protocol documentation, parameter tables, file structure explanations — was
+                        itself a discipline of "collaborating with myself." Over seven days, without clear
+                        documentation and version management, merely locating the latest version among a dozen
+                        <code>.py</code> files would have wasted enormous time.
+                    </p>
+                    <p>
+                        The version numbering under <code>launch/</code> (v1.0.1 → v1.3.6) seems trivial, but it was a
+                        lifeline: duplicate the old version before every major change, and roll back instantly if
+                        things went wrong.
+                    </p>
+                </section>
+
+                <section id="s8">
+                    <h2>8. Summary &amp; Outlook</h2>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Dimension</th>
+                                    <th>Takeaways</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Technical</strong></td>
+                                    <td>Mastered the end-to-end embedded vision pipeline: capture → inference →
+                                        post-processing → communication → display</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Engineering</strong></td>
+                                    <td>Deeply understood how edge-device resource constraints (memory, compute,
+                                        bandwidth) inversely shape algorithm design</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Methodology</strong></td>
+                                    <td>Established an efficient rhythm of "rapid iteration + version control + AI
+                                        assistance"</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Mindset</strong></td>
+                                    <td>Shifted from "pursuing the perfect solution" to "get it running first, optimize
+                                        later" — the only viable strategy under competition time pressure</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>If there's a next edition, I would improve in three areas:</p>
+                    <ol>
+                        <li><strong>Front-load hardware bring-up:</strong> camera, display, and UART driver debugging
+                            should be completed on Day 0, not interleaved with algorithm development.</li>
+                        <li><strong>Build an automated test pipeline:</strong> collect a batch of labeled test images
+                            and run regression tests after every algorithm change, rather than squinting at the screen
+                            and thinking "it looks a bit more accurate."</li>
+                        <li><strong>Introduce Kalman filtering earlier:</strong> EMA smoothing works acceptably, but for
+                            fast-moving cups, a Kalman filter's predictive capability would be superior.</li>
+                    </ol>
+                    <hr class="article-divider" />
+                    <p>
+                        Seven days of competition compressed a semester's worth of technical density into a single
+                        week. From Day 1's "the camera just won't turn on" to the final night's "liquid level height
+                        displayed steadily on the OLED," every error message, every false detection, every UART frame
+                        drop forced rapid learning, rapid decision-making, and rapid validation. That, perhaps, is the
+                        magic of the electronics design contest — making the impossible possible, within the tightest
+                        of deadlines.
+                    </p>
+                    <p class="signoff">— May 2026, Southeast University</p>
+                </section>
+            </article>
+        </div>
+
+        <footer class="site-footer">
+            <span>Copyright 2026 Ainepadma</span>
+            <a href="https://github.com/ainepadma" target="_blank" rel="noreferrer">GitHub</a>
+        </footer>
+    </div>
+
+    <script>
+        /* ── navigation scroll hide/show ── */
+        (() => {
+            const nav = document.querySelector(".site-nav");
+            if (!nav) return;
+            let lastScrollY = window.scrollY;
+            let ticking = false;
+            const showNav = () => nav.classList.remove("site-nav--hidden");
+            const hideNav = () => nav.classList.add("site-nav--hidden");
+            const onScroll = () => {
+                const y = window.scrollY;
+                if (y <= 8) showNav();
+                else if (y > lastScrollY + 6) hideNav();
+                else if (y < lastScrollY - 6) showNav();
+                lastScrollY = y;
+                ticking = false;
+            };
+            window.addEventListener("scroll", () => {
+                if (!ticking) { window.requestAnimationFrame(onScroll); ticking = true; }
+            }, { passive: true });
+            window.addEventListener("mousemove", (e) => { if (e.clientY <= 24) showNav(); });
+            window.addEventListener("touchstart", (e) => {
+                const t = e.touches && e.touches[0]; if (t && t.clientY <= 24) showNav();
+            }, { passive: true });
+            showNav();
+        })();
+
+        /* ── reading progress bar ── */
+        (() => {
+            const bar = document.getElementById("progress-bar");
+            if (!bar) return;
+            window.addEventListener("scroll", () => {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const pct = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
+                bar.style.width = pct + "%";
+            }, { passive: true });
+        })();
+
+        /* ── TOC active section tracking ── */
+        (() => {
+            const tocLinks = document.querySelectorAll(".toc-link");
+            const sections = [];
+            tocLinks.forEach((link) => {
+                const id = link.getAttribute("href");
+                if (id) {
+                    const el = document.querySelector(id);
+                    if (el) sections.push({ el, link });
+                }
+            });
+            if (!sections.length) return;
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        tocLinks.forEach((l) => l.classList.remove("toc-active"));
+                        const match = sections.find((s) => s.el === entry.target);
+                        if (match) match.link.classList.add("toc-active");
+                    }
+                });
+            }, { rootMargin: "-80px 0px -60% 0px", threshold: 0 });
+
+            sections.forEach((s) => observer.observe(s.el));
+
+            /* fallback: keep last visible active when scrolling past all */
+            window.addEventListener("scroll", () => {
+                const scrollY = window.scrollY + 100;
+                let active = null;
+                for (const s of sections) {
+                    if (s.el.offsetTop <= scrollY) active = s;
+                }
+                if (active) {
+                    tocLinks.forEach((l) => l.classList.remove("toc-active"));
+                    active.link.classList.add("toc-active");
+                }
+            }, { passive: true });
+        })();
+
+        /* ── TOC toggle (mobile) ── */
+        (() => {
+            const toggle = document.getElementById("toc-toggle");
+            const sidebar = document.getElementById("toc-sidebar");
+            if (!toggle || !sidebar) return;
+            toggle.addEventListener("click", () => {
+                const open = sidebar.classList.toggle("is-open");
+                toggle.setAttribute("aria-expanded", String(open));
+                toggle.textContent = open ? "✕ Contents" : "☰ Contents";
+            });
+        })();
+    </script>
+</body>
+
+</html>

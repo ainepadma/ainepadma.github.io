@@ -1,7 +1,7 @@
 # Reflections on a One-Week Electronics Design Competition
 
-> Problem D, 28th Electronics Design Contest of Southeast University: A Beverage Cup Measuring Device Based on Monocular Vision  
-> May 2026
+>Problem D, 28th Electronics Design Contest of Southeast University: A Beverage Cup Measuring Device Based on Monocular Vision  
+>May 2026
 
 ---
 
