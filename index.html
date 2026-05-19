@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="dark" />
     <title>Ainepadma | Home</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="description" content="Ainepadma personal site." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -220,6 +221,16 @@
             line-height: 1.05;
             max-width: 100%;
             margin: 0 0 8px;
+            transition: color 0.2s ease, text-shadow 0.25s ease;
+        }
+
+        .hero-title:hover,
+        .hero-title:focus-visible {
+            color: var(--accent-2);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75),
+                0 0 46px rgba(90, 210, 195, 0.6);
         }
 
         .hero-subtitle {
@@ -317,6 +328,21 @@
             display: inline-flex;
             align-items: center;
             gap: 14px;
+        }
+
+        .section-header a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s ease, text-shadow 0.25s ease;
+        }
+
+        .section-header a:hover,
+        .section-header a:focus-visible {
+            color: var(--text);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75),
+                0 0 46px rgba(90, 210, 195, 0.6);
         }
 
         .section-header h2 {
@@ -709,7 +735,7 @@
             <section class="hero">
                 <div class="hero-media">
                     <img class="avatar" src="https://github.com/ainepadma.png" alt="Ainepadma avatar" />
-                    <div class="hero-title">Ainepadma</div>
+                    <a class="hero-title" href="https://ainepadma.github.io/about">Ainepadma</a>
                 </div>
                 <div class="hero-body">
                     <h1 class="hero-stamp">Elite CS</h1>
@@ -755,12 +781,9 @@
 
             <section class="section">
                 <div class="section-header">
-                    <h2>Creative Projects</h2>
-                    <div class="section-actions">
-
-                        <a class="more-link" href="https://ainepadma.github.io/creative-projects" target="_blank"
-                            rel="noreferrer">More</a>
-                    </div>
+                    <a href="https://ainepadma.github.io/creative-projects">
+                        <h2>Creative Projects</h2>
+                    </a>
                 </div>
                 <div class="card-grid">
                     <div class="project-card">
@@ -774,11 +797,9 @@
             <!-- 项目区：展示当前主项目 -->
             <section class="section">
                 <div class="section-header">
-                    <h2>Solutions</h2>
-                    <div class="section-actions">
-                        <a class="more-link" href="https://ainepadma.github.io/solutions" target="_blank"
-                            rel="noreferrer">More</a>
-                    </div>
+                    <a href="https://ainepadma.github.io/solutions">
+                        <h2>Solutions</h2>
+                    </a>
                 </div>
                 <a class="project-card" href="https://github.com/ainepadma/Liquid-Level-Detection" target="_blank"
                     rel="noreferrer">
@@ -810,12 +831,9 @@
 
             <section class="section">
                 <div class="section-header">
-                    <h2>Blog</h2>
-                    <div class="section-actions">
-
-                        <a class="more-link" href="https://ainepadma.github.io/blog" target="_blank"
-                            rel="noreferrer">More</a>
-                    </div>
+                    <a href="https://ainepadma.github.io/blog">
+                        <h2>Blog</h2>
+                    </a>
                 </div>
                 <div class="card-grid">
                     <article class="project-card blog-card" data-blog-card data-max-length="720">
