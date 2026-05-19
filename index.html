@@ -25,6 +25,7 @@
             --accent-2: #5ad2c3;
             --line: #222c3a;
             --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+            --nav-height: 84px;
         }
 
         /* 基础重置 */
@@ -70,25 +71,21 @@
         .page {
             max-width: 1120px;
             margin: 0 auto;
-            padding: 32px 6vw 80px;
+            padding: 0 6vw 80px;
+            padding-top: calc(32px + var(--nav-height));
             display: grid;
             gap: 32px;
         }
 
         /* 顶部导航：吸附触发区域 */
         .nav-shell {
-            position: sticky;
-            top: 0;
-            z-index: 4;
+            position: relative;
+            z-index: 40;
             height: 0;
         }
 
         .nav-trigger {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 16px;
+            display: none;
         }
 
         /* 顶部导航：站点名称与主导航 */
@@ -98,27 +95,25 @@
             align-items: center;
             justify-content: space-between;
             gap: 16px;
-            padding: 16px 22px;
-            border-radius: 18px;
-            background: rgba(16, 22, 32, 0.75);
-            border: 1px solid var(--line);
+            padding: 14px 6vw;
+            border-radius: 0;
+            background: linear-gradient(135deg, rgba(18, 25, 36, 0.92), rgba(14, 20, 30, 0.95));
+            border-bottom: 1px solid var(--line);
             box-shadow: var(--shadow);
-            backdrop-filter: blur(14px);
-            position: absolute;
-            top: 16px;
+            backdrop-filter: blur(18px);
+            position: fixed;
+            top: 0;
             left: 0;
             right: 0;
-            transform: translateY(-140%);
-            opacity: 0;
-            pointer-events: none;
-            transition: transform 0.28s ease, opacity 0.2s ease;
-        }
-
-        .nav-shell:hover .site-nav,
-        .nav-shell:focus-within .site-nav {
             transform: translateY(0);
             opacity: 1;
-            pointer-events: auto;
+            transition: transform 0.25s ease, opacity 0.2s ease;
+        }
+
+        .site-nav--hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
         }
 
         .brand {
@@ -150,16 +145,22 @@
             text-transform: uppercase;
             letter-spacing: 0.18em;
             color: var(--muted);
-            padding: 6px 10px;
+            padding: 7px 14px;
             border-radius: 999px;
-            border: 1px solid transparent;
-            transition: color 0.2s ease, background 0.2s ease, border 0.2s ease;
+            border: none;
+            background: transparent;
+            transition: color 0.2s ease, text-shadow 0.25s ease;
         }
 
-        .nav-links a:hover {
+        .nav-links a:hover,
+        .nav-links a:focus-visible {
             color: var(--text);
-            background: rgba(90, 210, 195, 0.12);
-            border-color: rgba(90, 210, 195, 0.35);
+            background: transparent;
+            box-shadow: none;
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75),
+                0 0 46px rgba(90, 210, 195, 0.6);
         }
 
         /* 主体内容容器 */
@@ -309,6 +310,12 @@
             gap: 12px;
         }
 
+        .section-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+        }
+
         .section-header h2 {
             font-family: "Syne", sans-serif;
             margin: 0;
@@ -322,6 +329,58 @@
             color: var(--muted);
         }
 
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .card-meta {
+            font-size: 0.72rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .card-title {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .card-desc {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .section-footer {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .more-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 14px;
+            border-radius: 999px;
+            border: none;
+            color: var(--accent-2);
+            background: transparent;
+            transition: color 0.2s ease, text-shadow 0.25s ease;
+        }
+
+        .more-link:hover,
+        .more-link:focus-visible {
+            color: var(--text);
+            background: transparent;
+            box-shadow: none;
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75),
+                0 0 46px rgba(90, 210, 195, 0.6);
+        }
+
         /* 项目卡片：展示主要项目 */
         .project-card {
             background: var(--panel);
@@ -331,6 +390,14 @@
             display: grid;
             gap: 14px;
             box-shadow: var(--shadow);
+            transition: transform 0.2s ease, border 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .project-card:hover,
+        .project-card:focus-visible {
+            transform: translateY(-3px);
+            border-color: rgba(210, 192, 90, 0.45);
+            box-shadow: 0 26px 54px rgba(221, 197, 92, 0.5);
         }
 
         .project-head {
@@ -345,6 +412,7 @@
             margin: 0;
             font-size: 1.2rem;
         }
+
 
         .project-badge {
             padding: 6px 12px;
@@ -382,6 +450,146 @@
             border-radius: 999px;
         }
 
+        /* Blog card content */
+        .blog-card {
+            grid-column: 1 / -1;
+            gap: 18px;
+            align-items: start;
+        }
+
+        .blog-header {
+            display: grid;
+            gap: 6px;
+        }
+
+        .blog-body {
+            display: grid;
+            gap: 16px;
+            max-width: 72ch;
+            width: 100%;
+            margin-right: auto;
+        }
+
+        .blog-preview {
+            color: var(--muted);
+            line-height: 1.65;
+            font-size: 0.98rem;
+        }
+
+        .blog-full {
+            display: none;
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 0.98rem;
+        }
+
+        .blog-card.is-expanded .blog-full {
+            display: grid;
+            gap: 12px;
+        }
+
+        .blog-card.is-expanded .blog-preview {
+            display: none;
+        }
+
+        .blog-full h4 {
+            margin: 16px 0 6px;
+            font-size: 1.05rem;
+            color: var(--text);
+        }
+
+        .blog-full p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .blog-full strong {
+            color: var(--text);
+        }
+
+        .blog-full ul,
+        .blog-full ol {
+            margin: 0;
+            padding-left: 20px;
+            color: var(--muted);
+            display: grid;
+            gap: 6px;
+        }
+
+        .blog-quote {
+            margin: 0;
+            padding-left: 14px;
+            border-left: 2px solid rgba(90, 210, 195, 0.6);
+            font-style: italic;
+            color: var(--muted);
+        }
+
+        .blog-divider {
+            border: none;
+            height: 1px;
+            background: var(--line);
+            margin: 6px 0 10px;
+        }
+
+        .blog-table {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            overflow-x: auto;
+            background: rgba(10, 14, 20, 0.6);
+        }
+
+        .blog-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .blog-table th,
+        .blog-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--line);
+            vertical-align: top;
+        }
+
+        .blog-table th {
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text);
+        }
+
+        .blog-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .blog-signoff {
+            font-style: italic;
+            color: var(--muted);
+        }
+
+        .expand-btn {
+            justify-self: start;
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(90, 210, 195, 0.5);
+            background: rgba(16, 22, 32, 0.7);
+            color: var(--accent-2);
+            font-size: 0.78rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.2s ease, border 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+        }
+
+        .expand-btn:hover,
+        .expand-btn:focus-visible {
+            transform: translateY(-1px);
+            border-color: rgba(245, 179, 81, 0.6);
+            color: var(--text);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35);
+        }
+
         /* 页脚区域 */
         .site-footer {
             display: flex;
@@ -397,6 +605,16 @@
 
         .site-footer a {
             color: var(--accent-2);
+            transition: color 0.2s ease, text-shadow 0.25s ease;
+        }
+
+        .site-footer a:hover,
+        .site-footer a:focus-visible {
+            color: var(--text);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75),
+                0 0 46px rgba(90, 210, 195, 0.6);
         }
 
         @keyframes rise {
@@ -424,11 +642,20 @@
             .hero-social {
                 justify-content: center;
             }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-footer {
+                justify-content: center;
+            }
         }
 
         @media (max-width: 640px) {
             .page {
-                padding: 24px 6vw 60px;
+                padding: 0 6vw 60px;
+                padding-top: calc(24px + var(--nav-height));
             }
 
             .nav-links {
@@ -460,16 +687,15 @@
             <div class="nav-trigger" aria-hidden="true"></div>
             <nav class="site-nav">
                 <div class="brand">
-                    <a class="brand-title" href="#">Ainepadma</a>
-                    <span class="brand-meta">ainepadma.github.io</span>
+                    <a class="brand-title" href="https://ainepadma.github.io/">Ainepadma</a>
+
                 </div>
                 <div class="nav-links">
-                    <a href="#">About</a>
-                    <a href="#">Blog</a>
-                    <a href="#">Projects</a>
-                    <a href="#">Tags</a>
-                    <a href="#">Archive</a>
-                    <a href="#">Search</a>
+                    <a href="https://ainepadma.github.io/about">About</a>
+                    <a href="https://ainepadma.github.io/blog">Blog</a>
+                    <a href="https://ainepadma.github.io/creative-projects">Creative Projects</a>
+                    <a href="https://ainepadma.github.io/solutions">Solutions</a>
+
                 </div>
             </nav>
         </div>
@@ -488,7 +714,8 @@
                     <p class="hero-subtitle">
                         Computer science student focused on hardware and application software solutions.</p>
                     <div class="hero-social">
-                        <a class="social-link" href="https://github.com/ainepadma" aria-label="GitHub">
+                        <a class="social-link" href="https://github.com/ainepadma" target="_blank" rel="noreferrer"
+                            aria-label="GitHub">
                             <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M9 19c-5 1.5-5-2.5-7-3"></path>
                                 <path
@@ -497,14 +724,14 @@
                             </svg>
                         </a>
                         <a class="social-link" href="https://www.facebook.com/profile.php?id=61578713425728"
-                            aria-label="Facebook">
+                            target="_blank" rel="noreferrer" aria-label="Facebook">
                             <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z">
                                 </path>
                             </svg>
                         </a>
                         <a class="social-link" href="https://www.xiaohongshu.com/user/profile/65c2f00e000000001101ba14"
-                            aria-label="Xiaohongshu">
+                            target="_blank" rel="noreferrer" aria-label="Xiaohongshu">
                             <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M2 3h6a4 4 0 0 1 4 4v14a4 4 0 0 0-4-4H2z"></path>
                                 <path d="M22 3h-6a4 4 0 0 0-4 4v14a4 4 0 0 1 4-4h6z"></path>
@@ -523,32 +750,320 @@
                 </div>
             </section>
 
+            <section class="section">
+                <div class="section-header">
+                    <h2>Creative Projects</h2>
+                    <div class="section-actions">
+
+                        <a class="more-link" href="https://ainepadma.github.io/creative-projects" target="_blank"
+                            rel="noreferrer">More</a>
+                    </div>
+                </div>
+                <div class="card-grid">
+                    <div class="project-card">
+                        <h3 class="card-title">Preview</h3>
+                        <p class="card-desc">A weather forecast website that is favored by photographers and outdoor
+                            enthusiasts is about to be launched.</p>
+                    </div>
+                </div>
+            </section>
+
             <!-- 项目区：展示当前主项目 -->
             <section class="section">
                 <div class="section-header">
-                    <h2>Featured Project</h2>
-                    <span class="section-meta">2026</span>
+                    <h2>Solutions</h2>
+                    <div class="section-actions">
+                        <a class="more-link" href="https://ainepadma.github.io/solutions" target="_blank"
+                            rel="noreferrer">More</a>
+                    </div>
                 </div>
-                <article class="project-card">
+                <a class="project-card" href="https://github.com/ainepadma/Liquid-Level-Detection" target="_blank"
+                    rel="noreferrer">
                     <div class="project-head">
                         <h3>Liquid-Level-Detection</h3>
                         <span class="project-badge">Vision System</span>
                     </div>
                     <p class="project-desc">
-                        Monocular vision beverage cup measuring device for SEU Electronics Design Contest,
-                        using dual-model YOLOv5 on MaixCAM PRO and STM32.
+                        Problem D of the 28th Electronics Design Contest of Southeast University : A beverage cup
+                        measuring device based on monocular vision</p>
+                    <p class="project-desc">
+                        This project features a monocular vision system and STM32 communication pipeline I designed. I
+                        implemented a dual-model YOLOv5 detection framework with IoU-based tracking, EMA smoothing, and
+                        a custom liquid surface detection algorithm using blob analysis and gradient scoring. On the
+                        STM32 side, I established a reliable UART communication protocol at 115200 baud for real-time
+                        vision data transmission, fused with INA240A1 current sensor readings, and drove an SSD1315 OLED
+                        display for status output. The integrated pipeline processes high-resolution camera frames and
+                        delivers stable measurement results every three frames.
                     </p>
-                    <a class="project-link" href="https://github.com/ainepadma/Liquid-Level-Detection" target="_blank"
-                        rel="noreferrer">
-                        github.com/ainepadma/Liquid-Level-Detection
-                    </a>
+
                     <div class="tag-row">
                         <span class="tag">MaixCAM</span>
                         <span class="tag">YOLOv5</span>
                         <span class="tag">STM32</span>
                         <span class="tag">Computer Vision</span>
                     </div>
-                </article>
+                </a>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <h2>Blog</h2>
+                    <div class="section-actions">
+
+                        <a class="more-link" href="https://ainepadma.github.io/blog" target="_blank"
+                            rel="noreferrer">More</a>
+                    </div>
+                </div>
+                <div class="card-grid">
+                    <article class="project-card blog-card" data-blog-card data-max-length="720">
+                        <div class="blog-header">
+                            <h3 class="card-title">Reflections on a One-Week Electronics Design Competition</h3>
+                            <p class="card-meta">
+                                Problem D, 28th Electronics Design Contest of Southeast University: A Beverage Cup
+                                Measuring Device Based on Monocular Vision · May 2026
+                            </p>
+                        </div>
+                        <div class="blog-body">
+                            <div class="blog-preview" data-preview></div>
+                            <div class="blog-full" data-full id="reflection-full">
+                                <p class="blog-quote">
+                                    Problem D, 28th Electronics Design Contest of Southeast University: A Beverage Cup
+                                    Measuring Device Based on Monocular Vision<br />
+                                    May 2026
+                                </p>
+                                <hr class="blog-divider" />
+                                <h4>1. From Zero to One: How Much Can Be Done in Seven Days</h4>
+                                <p>
+                                    Seven days — transforming a seemingly simple problem ("measure the height of a
+                                    beverage in a cup using a single camera") from a paper proposal into a reliably
+                                    functioning embedded vision system. This was, without a doubt, the most technically
+                                    dense period of my undergraduate journey.
+                                </p>
+                                <p>
+                                    Looking back, we started with nothing more than a MaixCAM PRO development board, a
+                                    GC4653 camera sensor, an STM32 minimal system board, and a pile of Dupont wires. We
+                                    ended up delivering a complete device integrating <strong>dual-model YOLOv5 object
+                                        detection + liquid surface recognition + reference color extraction + UART
+                                        cross-chip communication + real-time OLED display</strong>. Glancing at the
+                                    project file structure, the <code>launch/</code> directory evolved from
+                                    <code>v1.0.1</code> all the way to <code>v1.3.6</code> — every version number
+                                    marking
+                                    a late-night debugging breakthrough.
+                                </p>
+                                <h4>2. The Breadth of the Tech Stack: Vision, Embedded, Communication — None Optional
+                                </h4>
+                                <p>
+                                    The difficulty of this problem lay not in drilling deep into any single domain, but
+                                    in <strong>multi-disciplinary system integration</strong>:
+                                </p>
+                                <div class="blog-table">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Layer</th>
+                                                <th>Technology</th>
+                                                <th>Pitfalls encountered</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Perception</strong></td>
+                                                <td>GC4653 2560×1440 image capture</td>
+                                                <td>High-res VI pool allocation failure — Camera must be initialized
+                                                    before YOLO</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Algorithm</strong></td>
+                                                <td>Dual-model YOLOv5 inference, liquid surface gradient detection, EMA
+                                                    smoothing &amp; locking</td>
+                                                <td>Model A/B confidence fusion weights tuned across 20+ parameter sets
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Communication</strong></td>
+                                                <td>MaixCAM UART → STM32 serial reception</td>
+                                                <td>Frame synchronization for CSV parsing at 115200 baud</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Actuation</strong></td>
+                                                <td>STM32 ADC sampling (INA240A1 current) + SSD1315 OLED display</td>
+                                                <td>Current sampling noise filtering</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p>
+                                    The deepest lesson: <strong>system integration is far harder than any individual
+                                        algorithm</strong>. Getting YOLOv5 running took only half a day. Getting the
+                                    detection results to flow reliably over UART to the STM32 and render correctly on a
+                                    0.96-inch OLED took two full days. Any subtle deviation in one link is magnified in
+                                    an end-to-end system.
+                                </p>
+                                <h4>3. The Algorithmic Heart: Liquid Surface Detection Was the Real Challenge</h4>
+                                <p>
+                                    Object detection (finding cups/bottles with YOLO) was actually the easiest part —
+                                    the model was pre-trained, just tune the parameters. The real challenge was
+                                    <strong>pinpointing the exact liquid surface inside the cup</strong>.
+                                </p>
+                                <p>This went through multiple rounds of trial and error:</p>
+                                <ol>
+                                    <li><strong>Canny edge detection approach</strong>
+                                        (<code>core/edge_detect.py</code>)
+                                        — completely unreliable under varying lighting; abandoned.</li>
+                                    <li><strong>Single blob detection</strong> — cup patterns and shadows produced
+                                        overwhelming false positives.</li>
+                                    <li><strong>Final approach</strong>: within the lower-half ROI of the object
+                                        bounding
+                                        box, score every row across four dimensions — gradient strength + color
+                                        similarity + above/below contrast + gradient direction bonus — apply weighted
+                                        scoring, then lock the result after 8 stable frames.</li>
+                                </ol>
+                                <p>
+                                    This algorithm consumed nearly 60% of total development time from conception to
+                                    stable operation. The takeaway: <strong>a seemingly intuitive problem (the human
+                                        eye instantly tells where the water surface is) often demands a mountain of
+                                        engineering tricks when implemented in computer vision</strong>.
+                                </p>
+                                <h4>4. Lessons from Dual-Model Fusion</h4>
+                                <p>Running two YOLOv5 models in parallel —</p>
+                                <ul>
+                                    <li>Model A (custom 2-class): high precision, limited generalization</li>
+                                    <li>Model B (COCO-pretrained 80-class): good generalization, lower confidence</li>
+                                </ul>
+                                <p>
+                                    Their fusion was never a simple weighted average. We designed a <strong>candidate
+                                        scoring system</strong> (confidence weight 5.0 + center proximity 2.0 +
+                                    previous-frame proximity 4.0 + liquid-level proximity 3.0), essentially encoding
+                                    temporal information and task priors into the fusion logic. This drove home a
+                                    crucial insight: <strong>on resource-constrained edge devices, algorithmic
+                                        competition is not about model size — it's about how efficiently you inject
+                                        domain knowledge into the inference pipeline</strong>.
+                                </p>
+                                <h4>5. Hardware War Stories</h4>
+                                <p>A few unforgettable hardware-level issues:</p>
+                                <ol>
+                                    <li><strong>Camera initialization order:</strong> loading the YOLO model before
+                                        initializing the Camera caused the 2560×1440 VI pool (~16.6 MB) allocation to
+                                        fail with <code>_create_vb_pool failed, id -2</code>. The NPU's shared memory
+                                        was already consumed by model weights. The fix was trivial — swap two lines of
+                                        code — but isolating this bug took an entire afternoon.</li>
+                                    <li><strong>Display resolution mismatch:</strong>
+                                        <code>img.resize(disp.width(), disp.height())</code> must be called before
+                                        <code>disp.show()</code>, otherwise the JPEG encoder's VB pool overflows with
+                                        <code>convert format failed</code>. A classic embedded Linux memory management
+                                        gotcha.
+                                    </li>
+                                    <li><strong>Lens selection:</strong> the 2.8–12mm variant of the JY-SDM12 proved far
+                                        more suitable than the 6.0–22mm for desktop scenarios at a 20–50 cm working
+                                        distance. Hardware selection cannot rely solely on spec sheets — it must be
+                                        tested against actual workspace conditions.</li>
+                                </ol>
+                                <p>
+                                    The common thread: <strong>error messages are separated from their root causes by
+                                        multiple layers of abstraction</strong>. On PC, we take transparent error
+                                    stacks for granted. On embedded platforms, every step is running bare-metal.
+                                </p>
+                                <h4>6. The New Paradigm of AI-Assisted Development</h4>
+                                <p>
+                                    This project used AI coding assistants (DeepSeek V4 Pro / GPT-5.2-Codex) throughout,
+                                    consuming an estimated 400–500 million cumulative tokens. That's not a cold,
+                                    impersonal number — it represents a fundamentally new way of developing:
+                                </p>
+                                <ul>
+                                    <li><strong>Rapid prototyping:</strong> from idea to runnable code, AI dramatically
+                                        shortened "typing time."</li>
+                                    <li><strong>Cross-domain knowledge bridging:</strong> when a vision algorithm
+                                        engineer needed to write an STM32 ADC driver, AI served as an instant
+                                        translator.</li>
+                                    <li><strong>Debugging acceleration:</strong> throw error logs at the AI, and it
+                                        often
+                                        pinpoints the root cause quickly (e.g., the VI pool allocation issue above).
+                                    </li>
+                                </ul>
+                                <p>
+                                    But clear-eyed honesty is required: <strong>AI cannot replace systems design
+                                        judgment</strong>. When to use dual models, how to design the four-dimensional
+                                    liquid surface scoring system, what IoU locking threshold to choose — these
+                                    decisions still depend on deep understanding of the problem. AI is an amplifier,
+                                    not a replacement.
+                                </p>
+                                <h4>7. Collaboration &amp; Project Management</h4>
+                                <p>
+                                    Although I competed solo, the engineering rigor of this README — system
+                                    architecture diagrams, communication protocol documentation, parameter tables, file
+                                    structure explanations — was itself a discipline of "collaborating with myself."
+                                    Over seven days, without clear documentation and version management, merely
+                                    locating the latest version among a dozen <code>.py</code> files would have wasted
+                                    enormous time.
+                                </p>
+                                <p>
+                                    The version numbering under <code>launch/</code> (v1.0.1 → v1.3.6) seems trivial,
+                                    but it was a lifeline: duplicate the old version before every major change, and
+                                    roll back instantly if things went wrong.
+                                </p>
+                                <h4>8. Summary &amp; Outlook</h4>
+                                <div class="blog-table">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Dimension</th>
+                                                <th>Takeaways</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Technical</strong></td>
+                                                <td>Mastered the end-to-end embedded vision pipeline: capture →
+                                                    inference → post-processing → communication → display</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Engineering</strong></td>
+                                                <td>Deeply understood how edge-device resource constraints (memory,
+                                                    compute, bandwidth) inversely shape algorithm design</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Methodology</strong></td>
+                                                <td>Established an efficient rhythm of "rapid iteration + version
+                                                    control + AI assistance"</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Mindset</strong></td>
+                                                <td>Shifted from "pursuing the perfect solution" to "get it running
+                                                    first, optimize later" — the only viable strategy under competition
+                                                    time pressure</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p>If there's a next edition, I would improve in three areas:</p>
+                                <ol>
+                                    <li><strong>Front-load hardware bring-up:</strong> camera, display, and UART driver
+                                        debugging should be completed on Day 0, not interleaved with algorithm
+                                        development.</li>
+                                    <li><strong>Build an automated test pipeline:</strong> collect a batch of labeled
+                                        test images and run regression tests after every algorithm change, rather than
+                                        squinting at the screen and thinking "it looks a bit more accurate."</li>
+                                    <li><strong>Introduce Kalman filtering earlier:</strong> EMA smoothing works
+                                        acceptably, but for fast-moving cups, a Kalman filter's predictive capability
+                                        would be superior.</li>
+                                </ol>
+                                <hr class="blog-divider" />
+                                <p>
+                                    Seven days of competition compressed a semester's worth of technical density into
+                                    a single week. From Day 1's "the camera just won't turn on" to the final night's
+                                    "liquid level height displayed steadily on the OLED," every error message, every
+                                    false detection, every UART frame drop forced rapid learning, rapid
+                                    decision-making, and rapid validation. That, perhaps, is the magic of the
+                                    electronics design contest — making the impossible possible, within the tightest
+                                    of deadlines.
+                                </p>
+                                <p class="blog-signoff"><em>— May 2026, Southeast University</em></p>
+                            </div>
+                            <button class="expand-btn" type="button" data-expand aria-expanded="false"
+                                aria-controls="reflection-full">Unfold</button>
+                        </div>
+                    </article>
+                </div>
             </section>
         </main>
 
@@ -564,6 +1079,59 @@
     </div>
 
     <script>
+        (() => {
+            const nav = document.querySelector(".site-nav");
+            if (!nav) {
+                return;
+            }
+
+            let lastScrollY = window.scrollY;
+            let ticking = false;
+
+            const showNav = () => nav.classList.remove("site-nav--hidden");
+            const hideNav = () => nav.classList.add("site-nav--hidden");
+
+            const onScroll = () => {
+                const currentY = window.scrollY;
+                if (currentY <= 8) {
+                    showNav();
+                } else if (currentY > lastScrollY + 6) {
+                    hideNav();
+                } else if (currentY < lastScrollY - 6) {
+                    showNav();
+                }
+
+                lastScrollY = currentY;
+                ticking = false;
+            };
+
+            const handleScroll = () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(onScroll);
+                    ticking = true;
+                }
+            };
+
+            window.addEventListener("scroll", handleScroll, { passive: true });
+            window.addEventListener("mousemove", (event) => {
+                if (event.clientY <= 24) {
+                    showNav();
+                }
+            });
+            window.addEventListener(
+                "touchstart",
+                (event) => {
+                    const touch = event.touches && event.touches[0];
+                    if (touch && touch.clientY <= 24) {
+                        showNav();
+                    }
+                },
+                { passive: true }
+            );
+
+            showNav();
+        })();
+
         (() => {
             const emailLink = document.querySelector("[data-email-link]");
             if (!emailLink) {
@@ -637,6 +1205,51 @@
                     fallbackCopy(email);
                     afterCopy();
                 }
+            });
+        })();
+
+        (() => {
+            const blogCard = document.querySelector("[data-blog-card]");
+            if (!blogCard) {
+                return;
+            }
+
+            const full = blogCard.querySelector("[data-full]");
+            const preview = blogCard.querySelector("[data-preview]");
+            const button = blogCard.querySelector("[data-expand]");
+            if (!full || !preview || !button) {
+                return;
+            }
+
+            const maxLength = Number.parseInt(blogCard.getAttribute("data-max-length") || "0", 10) || 900;
+            const fullText = full.textContent ? full.textContent.replace(/\s+/g, " ").trim() : "";
+
+            const setExpanded = (expanded) => {
+                blogCard.classList.toggle("is-expanded", expanded);
+                button.setAttribute("aria-expanded", String(expanded));
+                button.textContent = expanded ? "Fold" : "Unfold";
+            };
+
+            if (!fullText) {
+                setExpanded(true);
+                button.style.display = "none";
+                return;
+            }
+
+            if (fullText.length <= maxLength) {
+                setExpanded(true);
+                button.style.display = "none";
+                return;
+            }
+
+            const clipped = fullText.slice(0, maxLength);
+            const safeClip = clipped.replace(/\s+\S*$/, "");
+            const snippet = safeClip.length ? safeClip : clipped;
+            preview.textContent = `${snippet}…`;
+            setExpanded(false);
+
+            button.addEventListener("click", () => {
+                setExpanded(!blogCard.classList.contains("is-expanded"));
             });
         })();
     </script>
