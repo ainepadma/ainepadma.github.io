@@ -172,7 +172,7 @@
         /* 个人信息区：头像与简介 */
         .hero {
             display: grid;
-            grid-template-columns: minmax(200px, 260px) 1fr;
+            grid-template-columns: minmax(240px, 360px) minmax(0, 1fr);
             gap: 28px;
             align-items: center;
             padding: 28px;
@@ -187,6 +187,7 @@
             display: grid;
             gap: 14px;
             justify-items: start;
+            min-width: 0;
         }
 
         .avatar {
@@ -215,7 +216,9 @@
 
         .hero-title {
             font-family: "Syne", sans-serif;
-            font-size: clamp(2.3rem, 4vw, 3.4rem);
+            font-size: clamp(2.2rem, 4vw, 3rem);
+            line-height: 1.05;
+            max-width: 100%;
             margin: 0 0 8px;
         }
 
@@ -234,14 +237,14 @@
         .hero-social {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: clamp(10px, 2vw, 12px);
             margin-top: 16px;
         }
 
         .social-link {
-            width: 44px;
-            height: 44px;
-            border-radius: 14px;
+            width: clamp(38px, 4.5vw, 44px);
+            height: clamp(38px, 4.5vw, 44px);
+            border-radius: clamp(12px, 2vw, 14px);
             border: 1px solid rgba(90, 210, 195, 0.25);
             background: rgba(16, 22, 32, 0.7);
             display: inline-flex;
@@ -261,8 +264,8 @@
         }
 
         .social-icon {
-            width: 22px;
-            height: 22px;
+            width: clamp(20px, 2.2vw, 22px);
+            height: clamp(20px, 2.2vw, 22px);
             stroke: currentColor;
             fill: none;
             stroke-width: 1.6;
@@ -818,20 +821,16 @@
                     <article class="project-card blog-card" data-blog-card data-max-length="720">
                         <div class="blog-header">
                             <h3 class="card-title">Reflections on a One-Week Electronics Design Competition</h3>
-                            <p class="card-meta">
-                                Problem D, 28th Electronics Design Contest of Southeast University: A Beverage Cup
-                                Measuring Device Based on Monocular Vision · May 2026
-                            </p>
                         </div>
                         <div class="blog-body">
                             <div class="blog-preview" data-preview></div>
                             <div class="blog-full" data-full id="reflection-full">
-                                <p class="blog-quote">
+                                <p class="blog-quote" data-preview-skip>
                                     Problem D, 28th Electronics Design Contest of Southeast University: A Beverage Cup
                                     Measuring Device Based on Monocular Vision<br />
                                     May 2026
                                 </p>
-                                <hr class="blog-divider" />
+                                <hr class="blog-divider" data-preview-skip />
                                 <h4>1. From Zero to One: How Much Can Be Done in Seven Days</h4>
                                 <p>
                                     Seven days — transforming a seemingly simple problem ("measure the height of a
@@ -1222,7 +1221,14 @@
             }
 
             const maxLength = Number.parseInt(blogCard.getAttribute("data-max-length") || "0", 10) || 900;
-            const fullText = full.textContent ? full.textContent.replace(/\s+/g, " ").trim() : "";
+            const previewSource = full.cloneNode(true);
+            previewSource.querySelectorAll("[data-preview-skip]").forEach((node) => {
+                node.remove();
+            });
+
+            const fullText = previewSource.textContent
+                ? previewSource.textContent.replace(/\s+/g, " ").trim()
+                : "";
 
             const setExpanded = (expanded) => {
                 blogCard.classList.toggle("is-expanded", expanded);
