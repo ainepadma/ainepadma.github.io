@@ -786,11 +786,11 @@
                     </a>
                 </div>
                 <div class="card-grid">
-                    <div class="project-card">
+                    <a class="project-card" href="https://ainepadma.github.io/creative-projects">
                         <h3 class="card-title">Preview</h3>
                         <p class="card-desc">A weather forecast website that is favored by photographers and outdoor
                             enthusiasts is about to be launched.</p>
-                    </div>
+                    </a>
                 </div>
             </section>
 
@@ -801,8 +801,7 @@
                         <h2>Solutions</h2>
                     </a>
                 </div>
-                <a class="project-card" href="https://github.com/ainepadma/Liquid-Level-Detection" target="_blank"
-                    rel="noreferrer">
+                <a class="project-card" href="https://ainepadma.github.io/solutions">
                     <div class="project-head">
                         <h3>Liquid-Level-Detection</h3>
                         <span class="project-badge">Vision System</span>
@@ -836,7 +835,8 @@
                     </a>
                 </div>
                 <div class="card-grid">
-                    <article class="project-card blog-card" data-blog-card data-max-length="720">
+                    <a class="project-card blog-card" href="https://ainepadma.github.io/blog/reflection" data-blog-card
+                        data-max-length="720">
                         <div class="blog-header">
                             <h3 class="card-title">Reflections on a One-Week Electronics Design Competition</h3>
                         </div>
@@ -1079,7 +1079,7 @@
                             <button class="expand-btn" type="button" data-expand aria-expanded="false"
                                 aria-controls="reflection-full">Unfold</button>
                         </div>
-                    </article>
+                    </a>
                 </div>
             </section>
         </main>
@@ -1272,7 +1272,9 @@
             preview.textContent = `${snippet}…`;
             setExpanded(false);
 
-            button.addEventListener("click", () => {
+            button.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 setExpanded(!blogCard.classList.contains("is-expanded"));
             });
         })();
