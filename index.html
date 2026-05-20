@@ -62,6 +62,31 @@
             z-index: -1;
         }
 
+        /* 语言切换按钮 */
+        .lang-switch {
+            font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            background: transparent;
+            border: 1px solid rgba(90, 210, 195, 0.25);
+            border-radius: 999px;
+            padding: 5px 12px;
+            cursor: pointer;
+            transition: color 0.2s ease, text-shadow 0.25s ease, border-color 0.2s ease;
+            margin-left: 6px;
+        }
+
+        .lang-switch:hover,
+        .lang-switch:focus-visible {
+            color: var(--text);
+            border-color: rgba(90, 210, 195, 0.6);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75);
+        }
+
         /* 链接基础样式 */
         a {
             color: inherit;
@@ -479,6 +504,90 @@
             border-radius: 999px;
         }
 
+        /* Guestbook preview */
+        .guestbook-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .guestbook-card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 22px;
+            display: grid;
+            gap: 12px;
+            box-shadow: var(--shadow);
+            animation: rise 0.8s ease;
+        }
+
+        .guestbook-card--empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 36px 22px;
+            color: var(--muted);
+        }
+
+        .guestbook-card__user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .guestbook-card__avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .guestbook-card__name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .guestbook-card__date {
+            font-size: 0.72rem;
+            color: var(--muted);
+            letter-spacing: 0.08em;
+        }
+
+        .guestbook-card__body {
+            color: var(--muted);
+            line-height: 1.6;
+            font-size: 0.92rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .guestbook-card__link {
+            color: var(--accent-2);
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: color 0.2s ease, text-shadow 0.25s ease;
+        }
+
+        .guestbook-card__link:hover {
+            color: var(--text);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75);
+        }
+
+        .guestbook-loading {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 24px;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
         /* Blog card content */
         .blog-card {
             grid-column: 1 / -1;
@@ -672,7 +781,8 @@
                 justify-content: center;
             }
 
-            .card-grid {
+            .card-grid,
+            .guestbook-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -720,11 +830,13 @@
 
                 </div>
                 <div class="nav-links">
-                    <a href="https://ainepadma.github.io/about">About</a>
-                    <a href="https://ainepadma.github.io/blog">Blog</a>
-                    <a href="https://ainepadma.github.io/creative-projects">Creative Projects</a>
-                    <a href="https://ainepadma.github.io/solutions">Solutions</a>
-
+                    <a href="https://ainepadma.github.io/about" data-lang-key="nav.about">About</a>
+                    <a href="https://ainepadma.github.io/blog" data-lang-key="nav.blog">Blog</a>
+                    <a href="https://ainepadma.github.io/creative-projects" data-lang-key="nav.creative">Creative
+                        Projects</a>
+                    <a href="https://ainepadma.github.io/solutions" data-lang-key="nav.solutions">Solutions</a>
+                    <a href="https://ainepadma.github.io/guestbook" data-lang-key="nav.guestbook">Guestbook</a>
+                    <button class="lang-switch" id="lang-switch" type="button" aria-label="Switch language">中</button>
                 </div>
             </nav>
         </div>
@@ -738,9 +850,10 @@
                     <a class="hero-title" href="https://ainepadma.github.io/about">Ainepadma</a>
                 </div>
                 <div class="hero-body">
-                    <h1 class="hero-stamp">Elite CS</h1>
-                    <h1 class="hero-stamp">Chin-Shiung Wu College of Southeast University</h1>
-                    <p class="hero-subtitle">
+                    <h1 class="hero-stamp" data-lang-key="hero.elite">Elite CS</h1>
+                    <h1 class="hero-stamp" data-lang-key="hero.college">Chin-Shiung Wu College of Southeast University
+                    </h1>
+                    <p class="hero-subtitle" data-lang-key="hero.bio">
                         Computer science student focused on hardware and application software solutions.</p>
                     <div class="hero-social">
                         <a class="social-link" href="https://github.com/ainepadma" target="_blank" rel="noreferrer"
@@ -782,13 +895,14 @@
             <section class="section">
                 <div class="section-header">
                     <a href="https://ainepadma.github.io/creative-projects">
-                        <h2>Creative Projects</h2>
+                        <h2 data-lang-key="section.creative">Creative Projects</h2>
                     </a>
                 </div>
                 <div class="card-grid">
                     <a class="project-card" href="https://ainepadma.github.io/creative-projects">
-                        <h3 class="card-title">Preview</h3>
-                        <p class="card-desc">A weather forecast website that is favored by photographers and outdoor
+                        <h3 class="card-title" data-lang-key="card.preview">Preview</h3>
+                        <p class="card-desc" data-lang-key="card.preview-desc">A weather forecast website that is
+                            favored by photographers and outdoor
                             enthusiasts is about to be launched.</p>
                     </a>
                 </div>
@@ -798,7 +912,7 @@
             <section class="section">
                 <div class="section-header">
                     <a href="https://ainepadma.github.io/solutions">
-                        <h2>Solutions</h2>
+                        <h2 data-lang-key="section.solutions">Solutions</h2>
                     </a>
                 </div>
                 <a class="project-card" href="https://ainepadma.github.io/solutions">
@@ -831,14 +945,15 @@
             <section class="section">
                 <div class="section-header">
                     <a href="https://ainepadma.github.io/blog">
-                        <h2>Blog</h2>
+                        <h2 data-lang-key="section.blog">Blog</h2>
                     </a>
                 </div>
                 <div class="card-grid">
                     <a class="project-card blog-card" href="https://ainepadma.github.io/blog/reflection" data-blog-card
                         data-max-length="720">
                         <div class="blog-header">
-                            <h3 class="card-title">Reflections on a One-Week Electronics Design Competition</h3>
+                            <h3 class="card-title" data-lang-key="blog.title">Reflections on a One-Week Electronics
+                                Design Competition</h3>
                         </div>
                         <div class="blog-body">
                             <div class="blog-preview" data-preview></div>
@@ -1077,16 +1192,34 @@
                                 <p class="blog-signoff"><em>— May 2026, Southeast University</em></p>
                             </div>
                             <button class="expand-btn" type="button" data-expand aria-expanded="false"
-                                aria-controls="reflection-full">Unfold</button>
+                                aria-controls="reflection-full" data-lang-key="blog.unfold">Unfold</button>
                         </div>
                     </a>
+                </div>
+            </section>
+
+            <!-- 留言板预览区 -->
+            <section class="section">
+                <div class="section-header">
+                    <a href="https://ainepadma.github.io/guestbook">
+                        <h2 data-lang-key="section.guestbook">Guestbook</h2>
+                    </a>
+                    <div class="section-actions">
+                        <a href="https://ainepadma.github.io/guestbook" class="more-link"
+                            data-lang-key="guestbook.view-all">
+                            View All &rarr;
+                        </a>
+                    </div>
+                </div>
+                <div id="guestbook-preview" class="guestbook-grid">
+                    <div class="guestbook-loading" data-lang-key="guestbook.loading">Loading messages...</div>
                 </div>
             </section>
         </main>
 
         <!-- 页脚：版权与外链 -->
         <footer class="site-footer">
-            <span>Copyright 2026 Ainepadma</span>
+            <span data-lang-key="footer.copyright">Copyright 2026 Ainepadma</span>
             <a href="https://github.com/ainepadma" target="_blank" rel="noreferrer">GitHub</a>
         </footer>
     </div>
@@ -1251,7 +1384,10 @@
             const setExpanded = (expanded) => {
                 blogCard.classList.toggle("is-expanded", expanded);
                 button.setAttribute("aria-expanded", String(expanded));
-                button.textContent = expanded ? "Fold" : "Unfold";
+                const lang = window.__i18n ? window.__i18n.getLang() || "en" : "en";
+                button.textContent = expanded
+                    ? (window.__i18n ? window.__i18n.t("blog.fold", lang) : "Fold")
+                    : (window.__i18n ? window.__i18n.t("blog.unfold", lang) : "Unfold");
             };
 
             if (!fullText) {
@@ -1277,6 +1413,234 @@
                 e.stopPropagation();
                 setExpanded(!blogCard.classList.contains("is-expanded"));
             });
+        })();
+    </script>
+
+    <!-- i18n engine + IP geolocation -->
+    <script>
+        (() => {
+            const LANG_KEY = "ainepadma-lang";
+            const translations = {
+                en: {
+                    "nav.about": "About",
+                    "nav.blog": "Blog",
+                    "nav.creative": "Creative Projects",
+                    "nav.solutions": "Solutions",
+                    "nav.guestbook": "Guestbook",
+                    "hero.elite": "CS Elite Program ",
+                    "hero.college": "Wu Chin-Shiung Honors  College of Southeast University",
+                    "hero.bio": "Computer science student focused on hardware and application software solutions.",
+                    "section.creative": "Creative Projects",
+                    "section.solutions": "Solutions",
+                    "section.blog": "Blog",
+                    "section.guestbook": "Guestbook",
+                    "card.preview": "Preview",
+                    "card.preview-desc": "A weather forecast website that is favored by photographers and outdoor enthusiasts is about to be launched.",
+                    "blog.title": "Reflections on a One-Week Electronics Design Competition",
+                    "blog.unfold": "Unfold",
+                    "blog.fold": "Fold",
+                    "guestbook.view-all": "View All →",
+                    "guestbook.loading": "Loading messages...",
+                    "guestbook.no-messages": "No messages yet.",
+                    "guestbook.be-first": "Be the first to leave one →",
+                    "footer.copyright": "Copyright 2026 Ainepadma"
+                },
+                zh: {
+                    "nav.about": "关于",
+                    "nav.blog": "博客",
+                    "nav.creative": "创意项目",
+                    "nav.solutions": "解决方案",
+                    "nav.guestbook": "留言板",
+                    "hero.elite": "计算机拔尖班",
+                    "hero.college": "东南大学 吴健雄学院",
+                    "hero.bio": "计算机科学与技术专业学生，专注于硬件与应用软件解决方案。",
+                    "section.creative": "创意项目",
+                    "section.solutions": "解决方案",
+                    "section.blog": "博客",
+                    "section.guestbook": "留言板",
+                    "card.preview": "预览",
+                    "card.preview-desc": "一个备受摄影师和户外爱好者青睐的天气预报网站即将上线。",
+                    "blog.title": "七天电子设计竞赛回顾与总结",
+                    "blog.unfold": "展开",
+                    "blog.fold": "收起",
+                    "guestbook.view-all": "查看全部 →",
+                    "guestbook.loading": "加载中...",
+                    "guestbook.no-messages": "暂无留言。",
+                    "guestbook.be-first": "来成为第一个留言的人 →",
+                    "footer.copyright": "Copyright 2026 Ainepadma"
+                }
+            };
+
+            const isZhRegion = (countryCode) => {
+                const zhRegions = ["CN", "HK", "TW", "MO", "SG", "MY"];
+                return zhRegions.includes((countryCode || "").toUpperCase());
+            };
+
+            const getLang = () => {
+                const stored = localStorage.getItem(LANG_KEY);
+                if (stored === "en" || stored === "zh") return stored;
+                return null;
+            };
+
+            const setLang = (lang) => {
+                localStorage.setItem(LANG_KEY, lang);
+                applyLang(lang);
+                updateLangButton(lang);
+            };
+
+            const applyLang = (lang) => {
+                const t = translations[lang] || translations.en;
+                document.querySelectorAll("[data-lang-key]").forEach((el) => {
+                    const key = el.getAttribute("data-lang-key");
+                    if (t[key] != null) {
+                        if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+                            el.placeholder = t[key];
+                        } else {
+                            el.textContent = t[key];
+                        }
+                    }
+                });
+                // Keep the lang attr on html for CSS if needed
+                document.documentElement.lang = lang;
+                // Notify other scripts that lang changed
+                window.dispatchEvent(new CustomEvent("langchange", { detail: { lang } }));
+            };
+
+            const updateLangButton = (lang) => {
+                const btn = document.getElementById("lang-switch");
+                if (btn) btn.textContent = lang === "zh" ? "EN" : "中";
+            };
+
+            // Detect by IP
+            const detectByIP = () => {
+                fetch("https://ipapi.co/json/", { signal: AbortSignal.timeout(4000) })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        const country = data.country_code || "";
+                        const detected = isZhRegion(country) ? "zh" : "en";
+                        if (!getLang()) {
+                            applyLang(detected);
+                            updateLangButton(detected);
+                            localStorage.setItem(LANG_KEY, detected);
+                        }
+                    })
+                    .catch(() => {
+                        // Fallback to en if geo-IP fails
+                        if (!getLang()) {
+                            applyLang("en");
+                            updateLangButton("en");
+                            localStorage.setItem(LANG_KEY, "en");
+                        }
+                    });
+            };
+
+            // Init
+            const saved = getLang();
+            if (saved) {
+                applyLang(saved);
+                updateLangButton(saved);
+            } else {
+                // Apply en first for instant render, IP will override if needed
+                applyLang("en");
+                updateLangButton("en");
+                detectByIP();
+            }
+
+            // Click handler
+            document.getElementById("lang-switch").addEventListener("click", () => {
+                const current = getLang() || "en";
+                setLang(current === "zh" ? "en" : "zh");
+            });
+
+            // Expose for use by blog expand and guestbook preview
+            window.__i18n = {
+                getLang,
+                setLang,
+                applyLang,
+                t: (key, lang) => (translations[lang || getLang() || "en"] || translations.en)[key] || key,
+                translations
+            };
+        })();
+    </script>
+
+    <!-- Guestbook preview: fetch latest discussions -->
+    <script>
+        (() => {
+            const container = document.getElementById("guestbook-preview");
+            if (!container) return;
+
+            const REPO = "ainepadma/ainepadma.github.io";
+            const CATEGORY = "Guestbook";
+            const MAX = 10;
+
+            const timeAgo = (iso) => {
+                const diff = Date.now() - new Date(iso).getTime();
+                const mins = Math.floor(diff / 60000);
+                if (mins < 1) return "just now";
+                if (mins < 60) return `${mins}m ago`;
+                const hrs = Math.floor(mins / 60);
+                if (hrs < 24) return `${hrs}h ago`;
+                const days = Math.floor(hrs / 24);
+                if (days < 30) return `${days}d ago`;
+                const months = Math.floor(days / 30);
+                if (months < 12) return `${months}mo ago`;
+                return `${Math.floor(months / 12)}y ago`;
+            };
+
+            const renderCard = (discussion) => {
+                const user = discussion.user || {};
+                const avatar = user.avatar_url || "";
+                const login = user.login || "anonymous";
+                const body = (discussion.body || "").replace(/<[^>]*>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").slice(0, 300);
+                const date = timeAgo(discussion.created_at);
+                const url = discussion.html_url || "";
+
+                const card = document.createElement("div");
+                card.className = "guestbook-card";
+                card.style.animationDelay = `${Math.random() * 0.2}s`;
+                card.innerHTML = `
+                    <div class="guestbook-card__user">
+                        <img class="guestbook-card__avatar" src="${avatar}" alt="${login}" loading="lazy" />
+                        <span class="guestbook-card__name">${login}</span>
+                        <span class="guestbook-card__date">${date}</span>
+                    </div>
+                    <div class="guestbook-card__body">${body}</div>
+                    <a class="guestbook-card__link" href="${url}" target="_blank" rel="noreferrer">View on GitHub &rarr;</a>
+                `;
+                return card;
+            };
+
+            const t = (key) => window.__i18n ? window.__i18n.t(key) : key;
+
+            const renderEmpty = () => {
+                const card = document.createElement("div");
+                card.className = "guestbook-card guestbook-card--empty";
+                card.innerHTML = `
+                    <p>${t("guestbook.no-messages")} <a href="https://ainepadma.github.io/guestbook" style="color:var(--accent-2)">${t("guestbook.be-first")}</a></p>
+                `;
+                container.appendChild(card);
+            };
+
+            fetch(`https://api.github.com/repos/${REPO}/discussions?per_page=${MAX}`, {
+                headers: { Accept: "application/vnd.github+json" }
+            })
+                .then((res) => {
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    return res.json();
+                })
+                .then((discussions) => {
+                    container.innerHTML = "";
+                    const filtered = (discussions || []).slice(0, MAX);
+                    if (filtered.length === 0) {
+                        renderEmpty();
+                        return;
+                    }
+                    filtered.forEach((d) => container.appendChild(renderCard(d)));
+                })
+                .catch(() => {
+                    container.innerHTML = "";
+                    renderEmpty();
+                });
         })();
     </script>
 </body>

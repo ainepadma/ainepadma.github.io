@@ -156,6 +156,30 @@
                 0 0 18px rgba(90, 210, 195, 0.5);
         }
 
+        .lang-switch {
+            font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            background: transparent;
+            border: 1px solid rgba(90, 210, 195, 0.25);
+            border-radius: 999px;
+            padding: 5px 12px;
+            cursor: pointer;
+            transition: color 0.2s ease, text-shadow 0.25s ease, border-color 0.2s ease;
+            margin-left: 6px;
+        }
+
+        .lang-switch:hover,
+        .lang-switch:focus-visible {
+            color: var(--text);
+            border-color: rgba(90, 210, 195, 0.6);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75);
+        }
+
         /* ── page header ── */
         .page-header {
             display: grid;
@@ -336,18 +360,20 @@
                     <a class="brand-title" href="https://ainepadma.github.io/">Ainepadma</a>
                 </div>
                 <div class="nav-links">
-                    <a href="https://ainepadma.github.io/about">About</a>
-                    <a class="nav-active" href="https://ainepadma.github.io/blog">Blog</a>
-                    <a href="https://ainepadma.github.io/creative-projects">Creative Projects</a>
-                    <a href="https://ainepadma.github.io/solutions">Solutions</a>
+                    <a href="https://ainepadma.github.io/about" data-lang-key="nav.about">About</a>
+                    <a class="nav-active" href="https://ainepadma.github.io/blog" data-lang-key="nav.blog">Blog</a>
+                    <a href="https://ainepadma.github.io/creative-projects" data-lang-key="nav.creative">Creative Projects</a>
+                    <a href="https://ainepadma.github.io/solutions" data-lang-key="nav.solutions">Solutions</a>
+                    <a href="https://ainepadma.github.io/guestbook" data-lang-key="nav.guestbook">Guestbook</a>
+                    <button class="lang-switch" id="lang-switch" type="button" aria-label="Switch language">中</button>
                 </div>
             </nav>
         </div>
 
         <main class="content">
             <header class="page-header">
-                <p class="page-eyebrow">Blog</p>
-                <h1 class="page-title">Reflections &amp; Notes</h1>
+                <p class="page-eyebrow" data-lang-key="blog.eyebrow">Blog</p>
+                <h1 class="page-title" data-lang-key="blog.title">Reflections &amp; Notes</h1>
             </header>
 
             <div class="post-list">
@@ -374,10 +400,41 @@
         </main>
 
         <footer class="site-footer">
-            <span>Copyright 2026 Ainepadma</span>
+            <span data-lang-key="footer.copyright">Copyright 2026 Ainepadma</span>
             <a href="https://github.com/ainepadma" target="_blank" rel="noreferrer">GitHub</a>
         </footer>
     </div>
+
+    <script>
+        (() => {
+            const LANG_KEY = "ainepadma-lang";
+            const translations = {
+                en: {
+                    "nav.about": "About", "nav.blog": "Blog", "nav.creative": "Creative Projects",
+                    "nav.solutions": "Solutions", "nav.guestbook": "Guestbook",
+                    "blog.eyebrow": "Blog", "blog.title": "Reflections & Notes",
+                    "footer.copyright": "Copyright 2026 Ainepadma"
+                },
+                zh: {
+                    "nav.about": "关于", "nav.blog": "博客", "nav.creative": "创意项目",
+                    "nav.solutions": "解决方案", "nav.guestbook": "留言板",
+                    "blog.eyebrow": "博客", "blog.title": "随笔与笔记",
+                    "footer.copyright": "Copyright 2026 Ainepadma"
+                }
+            };
+            const isZh = (c) => ["CN","HK","TW","MO","SG","MY"].includes((c||"").toUpperCase());
+            const getLang = () => { const s = localStorage.getItem(LANG_KEY); return (s==="en"||s==="zh") ? s : null; };
+            const applyLang = (lang) => {
+                const t = translations[lang] || translations.en;
+                document.querySelectorAll("[data-lang-key]").forEach(el => { const k = el.getAttribute("data-lang-key"); if (t[k] != null) el.textContent = t[k]; });
+            };
+            const updateBtn = (lang) => { const b = document.getElementById("lang-switch"); if (b) b.textContent = lang==="zh" ? "EN" : "中"; };
+            const setLang = (lang) => { localStorage.setItem(LANG_KEY, lang); applyLang(lang); updateBtn(lang); };
+            const saved = getLang();
+            if (saved) { applyLang(saved); updateBtn(saved); } else { applyLang("en"); updateBtn("en"); fetch("https://ipapi.co/json/",{signal:AbortSignal.timeout(4000)}).then(r=>r.json()).then(d=>{if(!getLang()){const l=isZh(d.country_code)?"zh":"en";applyLang(l);updateBtn(l);localStorage.setItem(LANG_KEY,l);}}).catch(()=>{}); }
+            document.getElementById("lang-switch").addEventListener("click",()=>{setLang((getLang()||"en")==="zh"?"en":"zh");});
+        })();
+    </script>
 
     <script>
         (() => {

@@ -155,6 +155,30 @@
                 0 0 18px rgba(90, 210, 195, 0.5);
         }
 
+        .lang-switch {
+            font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            background: transparent;
+            border: 1px solid rgba(90, 210, 195, 0.25);
+            border-radius: 999px;
+            padding: 5px 12px;
+            cursor: pointer;
+            transition: color 0.2s ease, text-shadow 0.25s ease, border-color 0.2s ease;
+            margin-left: 6px;
+        }
+
+        .lang-switch:hover,
+        .lang-switch:focus-visible {
+            color: var(--text);
+            border-color: rgba(90, 210, 195, 0.6);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75);
+        }
+
         /* ── page header ── */
         .page-header {
             display: grid;
@@ -423,26 +447,28 @@
                     <a class="brand-title" href="https://ainepadma.github.io/">Ainepadma</a>
                 </div>
                 <div class="nav-links">
-                    <a class="nav-active" href="https://ainepadma.github.io/about">About</a>
-                    <a href="https://ainepadma.github.io/blog">Blog</a>
-                    <a href="https://ainepadma.github.io/creative-projects">Creative Projects</a>
-                    <a href="https://ainepadma.github.io/solutions">Solutions</a>
+                    <a class="nav-active" href="https://ainepadma.github.io/about" data-lang-key="nav.about">About</a>
+                    <a href="https://ainepadma.github.io/blog" data-lang-key="nav.blog">Blog</a>
+                    <a href="https://ainepadma.github.io/creative-projects" data-lang-key="nav.creative">Creative Projects</a>
+                    <a href="https://ainepadma.github.io/solutions" data-lang-key="nav.solutions">Solutions</a>
+                    <a href="https://ainepadma.github.io/guestbook" data-lang-key="nav.guestbook">Guestbook</a>
+                    <button class="lang-switch" id="lang-switch" type="button" aria-label="Switch language">中</button>
                 </div>
             </nav>
         </div>
 
         <main class="content">
             <header class="page-header">
-                <p class="page-eyebrow">About</p>
-                <h1 class="page-title">Who I Am</h1>
+                <p class="page-eyebrow" data-lang-key="about.eyebrow">About</p>
+                <h1 class="page-title" data-lang-key="about.title">Who I Am</h1>
             </header>
 
             <div class="about-hero">
                 <img class="avatar" src="https://github.com/ainepadma.png" alt="Ainepadma avatar" />
                 <div class="about-info">
-                    <h2 class="about-name">Ainepadma</h2>
-                    <p class="about-role">Elite CS · Chin-Shiung Wu College of Southeast University</p>
-                    <p class="about-bio">
+                    <h2 class="about-name" data-lang-key="about.name">Ainepadma</h2>
+                    <p class="about-role" data-lang-key="about.role">Computer Science Top-notch Talent Program · Wu Chin-Shiung Honors College of Southeast University</p>
+                    <p class="about-bio" data-lang-key="about.bio">
                         Computer science student focused on hardware and application software solutions.
                         Passionate about embedded systems, computer vision, and building things that bridge
                         the gap between software and the physical world.
@@ -484,7 +510,7 @@
             </div>
 
             <section class="detail-section">
-                <h2>Interests &amp; Focus</h2>
+                <h2 data-lang-key="about.interests">Interests &amp; Focus</h2>
                 <div class="skill-tags">
                     <span class="skill-tag">Embedded Systems</span>
                     <span class="skill-tag">Computer Vision</span>
@@ -499,16 +525,15 @@
             </section>
 
             <section class="detail-section">
-                <h2>Education</h2>
+                <h2 data-lang-key="about.education">Education</h2>
                 <ul>
-                    <li><strong>Southeast University</strong> — B.S. in Computer Science, Chin-Shiung Wu College (Elite
-                        CS Program)</li>
+                    <li data-lang-key="about.education-text"><strong>Southeast University</strong> — B.S. in Computer Science, Chin-Shiung Wu College (Elite CS Program)</li>
                 </ul>
             </section>
 
             <section class="detail-section">
-                <h2>Contact</h2>
-                <p>
+                <h2 data-lang-key="about.contact">Contact</h2>
+                <p data-lang-key="about.contact-text">
                     Feel free to reach out via <strong>Ainepadma24@gmail.com</strong> or through any of the social
                     platforms above. I'm always open to discussing new ideas, collaborations, or interesting problems
                     in embedded systems and computer vision.
@@ -517,7 +542,7 @@
         </main>
 
         <footer class="site-footer">
-            <span>Copyright 2026 Ainepadma</span>
+            <span data-lang-key="footer.copyright">Copyright 2026 Ainepadma</span>
             <a href="https://github.com/ainepadma" target="_blank" rel="noreferrer">GitHub</a>
         </footer>
     </div>
@@ -525,6 +550,53 @@
     <div class="toast" id="email-toast" role="status" aria-live="polite" aria-atomic="true">
         <span class="toast__text">Email copied</span>
     </div>
+
+    <script>
+        (() => {
+            const LANG_KEY = "ainepadma-lang";
+            const translations = {
+                en: {
+                    "nav.about": "About", "nav.blog": "Blog", "nav.creative": "Creative Projects",
+                    "nav.solutions": "Solutions", "nav.guestbook": "Guestbook",
+                    "about.eyebrow": "About", "about.title": "Who I Am",
+                    "about.name": "Ainepadma",
+                    "about.role": "Computer Science Top-notch Talent Program · Wu Chin-Shiung Honors College of Southeast University",
+                    "about.bio": "Computer science student focused on hardware and application software solutions. Passionate about embedded systems, computer vision, and building things that bridge the gap between software and the physical world.",
+                    "about.interests": "Interests & Focus",
+                    "about.education": "Education",
+                    "about.education-text": "Southeast University — B.S. in Computer Science, Chin-Shiung Wu College (Elite CS Program)",
+                    "about.contact": "Contact",
+                    "about.contact-text": "Feel free to reach out via Ainepadma24@gmail.com or through any of the social platforms above. I’m always open to discussing new ideas, collaborations, or interesting problems in embedded systems and computer vision.",
+                    "footer.copyright": "Copyright 2026 Ainepadma"
+                },
+                zh: {
+                    "nav.about": "关于", "nav.blog": "博客", "nav.creative": "创意项目",
+                    "nav.solutions": "解决方案", "nav.guestbook": "留言板",
+                    "about.eyebrow": "关于", "about.title": "我是谁",
+                    "about.name": "Ainepadma",
+                    "about.role": "东南大学 吴健雄学院 计算机科学与技术拔尖人才培养项目",
+                    "about.bio": "计算机科学与技术专业学生，专注于硬件与应用软件解决方案。热衷于嵌入式系统、计算机视觉，喜欢搭建连接软件与物理世界的桥梁。",
+                    "about.interests": "兴趣与研究方向",
+                    "about.education": "教育背景",
+                    "about.education-text": "东南大学 — 计算机科学与技术学士，吴健雄学院（精英计算机科学项目）",
+                    "about.contact": "联系方式",
+                    "about.contact-text": "欢迎通过 Ainepadma24@gmail.com 或上述任何社交平台与我联系。我始终乐于探讨新的想法、合作或嵌入式系统和计算机视觉领域的有趣问题。",
+                    "footer.copyright": "Copyright 2026 Ainepadma"
+                }
+            };
+            const isZh = (c) => ["CN","HK","TW","MO","SG","MY"].includes((c||"").toUpperCase());
+            const getLang = () => { const s = localStorage.getItem(LANG_KEY); return (s==="en"||s==="zh") ? s : null; };
+            const applyLang = (lang) => {
+                const t = translations[lang] || translations.en;
+                document.querySelectorAll("[data-lang-key]").forEach(el => { const k = el.getAttribute("data-lang-key"); if (t[k] != null) el.textContent = t[k]; });
+            };
+            const updateBtn = (lang) => { const b = document.getElementById("lang-switch"); if (b) b.textContent = lang==="zh" ? "EN" : "中"; };
+            const setLang = (lang) => { localStorage.setItem(LANG_KEY, lang); applyLang(lang); updateBtn(lang); };
+            const saved = getLang();
+            if (saved) { applyLang(saved); updateBtn(saved); } else { applyLang("en"); updateBtn("en"); fetch("https://ipapi.co/json/",{signal:AbortSignal.timeout(4000)}).then(r=>r.json()).then(d=>{if(!getLang()){const l=isZh(d.country_code)?"zh":"en";applyLang(l);updateBtn(l);localStorage.setItem(LANG_KEY,l);}}).catch(()=>{}); }
+            document.getElementById("lang-switch").addEventListener("click",()=>{setLang((getLang()||"en")==="zh"?"en":"zh");});
+        })();
+    </script>
 
     <script>
         /* ── navigation ── */
