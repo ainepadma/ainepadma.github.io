@@ -155,6 +155,7 @@
                 0 0 18px rgba(90, 210, 195, 0.5);
         }
 
+        /* 语言切换按钮（已注释）
         .lang-switch { display: none;
             font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
             font-size: 0.72rem;
@@ -177,7 +178,7 @@
             text-shadow:
                 0 0 8px rgba(90, 210, 195, 0.85),
                 0 0 22px rgba(90, 210, 195, 0.75);
-        }
+        } */
 
         /* ── page header ── */
         .page-header {
@@ -449,10 +450,11 @@
                 <div class="nav-links">
                     <a class="nav-active" href="https://ainepadma.github.io/about" data-lang-key="nav.about">About</a>
                     <a href="https://ainepadma.github.io/blog" data-lang-key="nav.blog">Blog</a>
-                    <a href="https://ainepadma.github.io/creative-projects" data-lang-key="nav.creative">Creative Projects</a>
+                    <a href="https://ainepadma.github.io/creative-projects" data-lang-key="nav.creative">Creative
+                        Projects</a>
                     <a href="https://ainepadma.github.io/solutions" data-lang-key="nav.solutions">Solutions</a>
                     <a href="https://ainepadma.github.io/guestbook" data-lang-key="nav.guestbook">Guestbook</a>
-                    <button class="lang-switch" id="lang-switch" type="button" aria-label="Switch language">中</button>
+                    <!-- <button class="lang-switch" id="lang-switch" type="button" aria-label="Switch language">中</button> -->
                 </div>
             </nav>
         </div>
@@ -467,7 +469,8 @@
                 <img class="avatar" src="https://github.com/ainepadma.png" alt="Ainepadma avatar" />
                 <div class="about-info">
                     <h2 class="about-name" data-lang-key="about.name">Ainepadma</h2>
-                    <p class="about-role" data-lang-key="about.role">Computer Science Top-notch Talent Program · Wu Chin-Shiung Honors College of Southeast University</p>
+                    <p class="about-role" data-lang-key="about.role">Computer Science Top-notch Talent Program · Wu
+                        Chin-Shiung Honors College of Southeast University</p>
                     <p class="about-bio" data-lang-key="about.bio">
                         Computer science student focused on hardware and application software solutions.
                         Passionate about embedded systems, computer vision, and building things that bridge
@@ -527,7 +530,8 @@
             <section class="detail-section">
                 <h2 data-lang-key="about.education">Education</h2>
                 <ul>
-                    <li data-lang-key="about.education-text"><strong>Southeast University</strong> — B.S. in Computer Science, Chin-Shiung Wu College (Elite CS Program)</li>
+                    <li data-lang-key="about.education-text"><strong>Southeast University</strong> — B.S. in Computer
+                        Science, Chin-Shiung Wu College (Elite CS Program)</li>
                 </ul>
             </section>
 
@@ -551,6 +555,7 @@
         <span class="toast__text">Email copied</span>
     </div>
 
+    <!-- i18n engine（已注释）
     <script>
         (() => {
             const LANG_KEY = "ainepadma-lang";
@@ -597,6 +602,7 @@
             document.getElementById("lang-switch").addEventListener("click",()=>{setLang((getLang()||"en")==="zh"?"en":"zh");});
         })();
     </script>
+    -->
 
     <script>
         /* ── navigation ── */

@@ -156,6 +156,7 @@
                 0 0 18px rgba(90, 210, 195, 0.5);
         }
 
+        /* 语言切换按钮（已注释）
         .lang-switch { display: none;
             font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
             font-size: 0.72rem;
@@ -178,7 +179,7 @@
             text-shadow:
                 0 0 8px rgba(90, 210, 195, 0.85),
                 0 0 22px rgba(90, 210, 195, 0.75);
-        }
+        } */
 
         /* ── page header ── */
         .page-header {
@@ -362,10 +363,11 @@
                 <div class="nav-links">
                     <a href="https://ainepadma.github.io/about" data-lang-key="nav.about">About</a>
                     <a class="nav-active" href="https://ainepadma.github.io/blog" data-lang-key="nav.blog">Blog</a>
-                    <a href="https://ainepadma.github.io/creative-projects" data-lang-key="nav.creative">Creative Projects</a>
+                    <a href="https://ainepadma.github.io/creative-projects" data-lang-key="nav.creative">Creative
+                        Projects</a>
                     <a href="https://ainepadma.github.io/solutions" data-lang-key="nav.solutions">Solutions</a>
                     <a href="https://ainepadma.github.io/guestbook" data-lang-key="nav.guestbook">Guestbook</a>
-                    <button class="lang-switch" id="lang-switch" type="button" aria-label="Switch language">中</button>
+                    <!-- <button class="lang-switch" id="lang-switch" type="button" aria-label="Switch language">中</button> -->
                 </div>
             </nav>
         </div>
@@ -405,6 +407,7 @@
         </footer>
     </div>
 
+    <!-- i18n engine（已注释）
     <script>
         (() => {
             const LANG_KEY = "ainepadma-lang";
@@ -435,6 +438,7 @@
             document.getElementById("lang-switch").addEventListener("click",()=>{setLang((getLang()||"en")==="zh"?"en":"zh");});
         })();
     </script>
+    -->
 
     <script>
         (() => {

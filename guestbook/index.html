@@ -154,6 +154,7 @@
                 0 0 18px rgba(90, 210, 195, 0.5);
         }
 
+        /* 语言切换按钮（已注释）
         .lang-switch { display: none;
             font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
             font-size: 0.72rem;
@@ -176,7 +177,7 @@
             text-shadow:
                 0 0 8px rgba(90, 210, 195, 0.85),
                 0 0 22px rgba(90, 210, 195, 0.75);
-        }
+        } */
 
         .page-header {
             display: grid;
@@ -248,6 +249,7 @@
                 opacity: 0;
                 transform: translateY(18px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -259,12 +261,15 @@
                 padding: 0 6vw 60px;
                 padding-top: calc(24px + var(--nav-height));
             }
+
             .nav-links {
                 gap: 6px;
             }
+
             .nav-links a {
                 letter-spacing: 0.12em;
             }
+
             .giscus-wrapper {
                 padding: 18px;
             }
@@ -283,10 +288,12 @@
                 <div class="nav-links">
                     <a href="https://ainepadma.github.io/about" data-lang-key="nav.about">About</a>
                     <a href="https://ainepadma.github.io/blog" data-lang-key="nav.blog">Blog</a>
-                    <a href="https://ainepadma.github.io/creative-projects" data-lang-key="nav.creative">Creative Projects</a>
+                    <a href="https://ainepadma.github.io/creative-projects" data-lang-key="nav.creative">Creative
+                        Projects</a>
                     <a href="https://ainepadma.github.io/solutions" data-lang-key="nav.solutions">Solutions</a>
-                    <a class="nav-active" href="https://ainepadma.github.io/guestbook" data-lang-key="nav.guestbook">Guestbook</a>
-                    <button class="lang-switch" id="lang-switch" type="button" aria-label="Switch language">中</button>
+                    <a class="nav-active" href="https://ainepadma.github.io/guestbook"
+                        data-lang-key="nav.guestbook">Guestbook</a>
+                    <!-- <button class="lang-switch" id="lang-switch" type="button" aria-label="Switch language">中</button> -->
                 </div>
             </nav>
         </div>
@@ -296,26 +303,18 @@
                 <p class="page-eyebrow" data-lang-key="guestbook.eyebrow">Guestbook</p>
                 <h1 class="page-title" data-lang-key="guestbook.title">Leave a Message</h1>
                 <p class="page-desc" data-lang-key="guestbook.desc">
-                    Sign in with your GitHub account to leave a comment. Share your thoughts, feedback, or just say hello.
+                    Sign in with your GitHub account to leave a comment. Share your thoughts, feedback, or just say
+                    hello.
                 </p>
             </header>
 
             <div class="giscus-wrapper">
-                <script src="https://giscus.app/client.js"
-                    data-repo="ainepadma/ainepadma.github.io"
-                    data-repo-id="R_kgDOSg_Skg"
-                    data-category="Guestbook"
-                    data-category-id="DIC_kwDOSg_Sks4C9bx0"
-                    data-mapping="pathname"
-                    data-strict="0"
-                    data-reactions-enabled="1"
-                    data-emit-metadata="0"
-                    data-input-position="bottom"
-                    data-theme="transparent_dark"
-                    data-lang="en"
-                    crossorigin="anonymous"
+                <script src="https://giscus.app/client.js" data-repo="ainepadma/ainepadma.github.io"
+                    data-repo-id="R_kgDOSg_Skg" data-category="Guestbook" data-category-id="DIC_kwDOSg_Sks4C9bx0"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0"
+                    data-input-position="bottom" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous"
                     async>
-                </script>
+                    </script>
             </div>
         </main>
 
@@ -325,6 +324,7 @@
         </footer>
     </div>
 
+    <!-- i18n engine（已注释）
     <script>
         (() => {
             const LANG_KEY = "ainepadma-lang";
@@ -405,6 +405,7 @@
             });
         })();
     </script>
+    -->
 
     <script>
         (() => {
