@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>Ainepadma | About</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <meta name="description" content="About Ainepadma — computer science student at Southeast University." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #0b0e13;
+            --panel: #141b26;
+            --text: #e7edf2;
+            --muted: #9aa4b2;
+            --accent: #f5b351;
+            --accent-2: #5ad2c3;
+            --line: #222c3a;
+            --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+            --nav-height: 84px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+            background:
+                radial-gradient(1200px 600px at 12% -10%, rgba(245, 179, 81, 0.2), transparent 60%),
+                radial-gradient(900px 500px at 90% 10%, rgba(90, 210, 195, 0.18), transparent 55%),
+                var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(120deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)),
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.05), transparent 60%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        #smoke-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            opacity: 0.55;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .page {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 6vw 80px;
+            padding-top: calc(32px + var(--nav-height));
+            display: grid;
+            gap: 32px;
+        }
+
+        /* ── navigation ── */
+        .nav-shell {
+            position: relative;
+            z-index: 40;
+            height: 0;
+        }
+
+        .nav-trigger {
+            display: none;
+        }
+
+        .site-nav {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 14px 6vw;
+            background: linear-gradient(135deg, rgba(18, 25, 36, 0.7), rgba(14, 20, 30, 0.7));
+            border-bottom: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            transform: translateY(0);
+            opacity: 1;
+            transition: transform 0.25s ease, opacity 0.2s ease;
+            z-index: 50;
+        }
+
+        .site-nav--hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .brand {
+            display: grid;
+            gap: 4px;
+        }
+
+        .brand-title {
+            font-family: "Syne", sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-links a {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--muted);
+            padding: 7px 14px;
+            border-radius: 999px;
+            border: none;
+            background: transparent;
+            transition: color 0.2s ease, text-shadow 0.25s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus-visible {
+            color: var(--text);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75),
+                0 0 46px rgba(90, 210, 195, 0.6);
+        }
+
+        .nav-links .nav-active {
+            color: var(--text);
+            text-shadow:
+                0 0 6px rgba(90, 210, 195, 0.6),
+                0 0 18px rgba(90, 210, 195, 0.5);
+        }
+
+        /* 语言切换按钮（已注释）
+        .lang-switch { display: none;
+            font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            background: transparent;
+            border: 1px solid rgba(90, 210, 195, 0.25);
+            border-radius: 999px;
+            padding: 5px 12px;
+            cursor: pointer;
+            transition: color 0.2s ease, text-shadow 0.25s ease, border-color 0.2s ease;
+            margin-left: 6px;
+        }
+
+        .lang-switch:hover,
+        .lang-switch:focus-visible {
+            color: var(--text);
+            border-color: rgba(90, 210, 195, 0.6);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75);
+        } */
+
+        /* ── page header ── */
+        .page-header {
+            display: grid;
+            gap: 6px;
+            margin-bottom: 4px;
+            animation: rise 0.8s ease;
+        }
+
+        .page-eyebrow {
+            font-size: 0.78rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        .page-title {
+            font-family: "Syne", sans-serif;
+            font-size: clamp(2rem, 3.5vw, 2.8rem);
+            margin: 0;
+            line-height: 1.05;
+        }
+
+        /* ── about hero ── */
+        .about-hero {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 32px;
+            align-items: center;
+            animation: rise 0.8s ease 0.06s both;
+        }
+
+        .avatar {
+            width: 160px;
+            height: 160px;
+            border-radius: 28px;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .about-info {
+            display: grid;
+            gap: 8px;
+        }
+
+        .about-name {
+            font-family: "Syne", sans-serif;
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .about-role {
+            font-size: 0.78rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        .about-bio {
+            margin: 4px 0 0;
+            color: var(--muted);
+            line-height: 1.65;
+            max-width: 64ch;
+        }
+
+        .social-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .social-link {
+            width: 42px;
+            height: 42px;
+            border-radius: 13px;
+            border: 1px solid rgba(90, 210, 195, 0);
+            background: rgba(16, 22, 32, 0);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border 0.2s ease, color 0.2s ease;
+        }
+
+        .social-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 26px rgba(0, 0, 0, 0);
+            background: rgba(245, 179, 81, 0);
+            border-color: rgba(245, 179, 81, 0);
+            color: var(--accent);
+        }
+
+        .social-icon {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* ── detail sections ── */
+        .detail-section {
+            display: grid;
+            gap: 12px;
+            animation: rise 0.8s ease 0.1s both;
+        }
+
+        .detail-section h2 {
+            font-family: "Syne", sans-serif;
+            font-size: 1.4rem;
+            margin: 0;
+        }
+
+        .detail-section p,
+        .detail-section li {
+            color: var(--muted);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .detail-section ul {
+            margin: 0;
+            padding-left: 18px;
+            display: grid;
+            gap: 6px;
+            color: var(--muted);
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-tag {
+            font-size: 0.82rem;
+            color: var(--muted);
+            border: 1px solid var(--line);
+            padding: 8px 14px;
+            border-radius: 999px;
+            transition: border-color 0.2s ease, color 0.2s ease;
+        }
+
+        .skill-tag:hover {
+            border-color: var(--accent-2);
+            color: var(--text);
+        }
+
+        /* ── footer ── */
+        .site-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-top: 1px solid var(--line);
+            padding-top: 18px;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        .site-footer a {
+            color: var(--accent-2);
+            transition: color 0.2s ease, text-shadow 0.25s ease;
+        }
+
+        .site-footer a:hover,
+        .site-footer a:focus-visible {
+            color: var(--text);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75),
+                0 0 46px rgba(90, 210, 195, 0.6);
+        }
+
+        /* ── toast ── */
+        .toast {
+            position: fixed;
+            right: 28px;
+            bottom: 28px;
+            background: rgba(16, 22, 32, 0.92);
+            color: var(--text);
+            border: 1px solid rgba(90, 210, 195, 0.35);
+            border-radius: 14px;
+            padding: 12px 16px;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .toast--show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast__text {
+            font-size: 0.85rem;
+            letter-spacing: 0.02em;
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .page {
+                padding: 0 6vw 60px;
+                padding-top: calc(24px + var(--nav-height));
+            }
+
+            .nav-links {
+                gap: 6px;
+            }
+
+            .nav-links a {
+                letter-spacing: 0.12em;
+            }
+
+            .about-hero {
+                grid-template-columns: 1fr;
+                justify-items: center;
+                text-align: center;
+            }
+
+            .social-row {
+                justify-content: center;
+            }
+
+            .avatar {
+                width: 130px;
+                height: 130px;
+            }
+
+            .toast {
+                left: 16px;
+                right: 16px;
+                bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="smoke-canvas" data-color="#f5b351"></canvas>
+    <div class="page">
+        <!-- ── navigation ── -->
+        <div class="nav-shell">
+            <div class="nav-trigger" aria-hidden="true"></div>
+            <nav class="site-nav">
+                <div class="brand">
+                    <a class="brand-title" href="https://ainepadma.github.io/">Ainepadma</a>
+                </div>
+                <div class="nav-links">
+                    <a class="nav-active" href="https://ainepadma.github.io/about" data-lang-key="nav.about">About</a>
+                    <a href="https://ainepadma.github.io/blog" data-lang-key="nav.blog">Blog</a>
+                    <a href="https://ainepadma.github.io/creative-projects" data-lang-key="nav.creative">Creative
+                        Projects</a>
+                    <a href="https://ainepadma.github.io/solutions" data-lang-key="nav.solutions">Solutions</a>
+                    <a href="https://ainepadma.github.io/guestbook" data-lang-key="nav.guestbook">Guestbook</a>
+                    <!-- <button class="lang-switch" id="lang-switch" type="button" aria-label="Switch language">中</button> -->
+                </div>
+            </nav>
+        </div>
+
+        <main class="content">
+            <header class="page-header">
+                <p class="page-eyebrow" data-lang-key="about.eyebrow">About</p>
+                <h1 class="page-title" data-lang-key="about.title">Who I Am</h1>
+            </header>
+
+            <div class="about-hero">
+                <img class="avatar" src="https://github.com/ainepadma.png" alt="Ainepadma avatar" />
+                <div class="about-info">
+                    <h2 class="about-name" data-lang-key="about.name">Ainepadma</h2>
+                    <p class="about-role" data-lang-key="about.role">Computer Science Top-notch Talent Program · Wu
+                        Chin-Shiung Honors College of Southeast University</p>
+                    <p class="about-bio" data-lang-key="about.bio">
+                        Computer science student focused on hardware and application software solutions.
+                        Passionate about embedded systems, computer vision, and building things that bridge
+                        the gap between software and the physical world.
+                    </p>
+                    <div class="social-row">
+                        <a class="social-link" href="https://github.com/ainepadma" target="_blank" rel="noreferrer"
+                            aria-label="GitHub">
+                            <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3"></path>
+                                <path
+                                    d="M16 22v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                                </path>
+                            </svg>
+                        </a>
+                        <a class="social-link" href="https://www.facebook.com/profile.php?id=61578713425728"
+                            target="_blank" rel="noreferrer" aria-label="Facebook">
+                            <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                            </svg>
+                        </a>
+                        <a class="social-link" href="https://www.xiaohongshu.com/user/profile/65c2f00e000000001101ba14"
+                            target="_blank" rel="noreferrer" aria-label="Xiaohongshu">
+                            <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M2 3h6a4 4 0 0 1 4 4v14a4 4 0 0 0-4-4H2z"></path>
+                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a4 4 0 0 1 4-4h6z"></path>
+                            </svg>
+                        </a>
+                        <a class="social-link" data-email-link data-email="Ainepadma24@gmail.com" href="#"
+                            aria-label="Gmail">
+                            <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M4 6h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z">
+                                </path>
+                                <path d="M22 8l-10 7L2 8"></path>
+                                <path d="M6 18l6-6 6 6"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <section class="detail-section">
+                <h2 data-lang-key="about.interests">Interests &amp; Focus</h2>
+                <div class="skill-tags">
+                    <span class="skill-tag">Embedded Systems</span>
+                    <span class="skill-tag">Computer Vision</span>
+                    <span class="skill-tag">YOLO / Object Detection</span>
+                    <span class="skill-tag">STM32 / ARM</span>
+                    <span class="skill-tag">C / C++</span>
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">Algorithm Design</span>
+                    <span class="skill-tag">UART / I2C / SPI</span>
+                    <span class="skill-tag">PCB &amp; Hardware</span>
+                </div>
+            </section>
+
+            <section class="detail-section">
+                <h2 data-lang-key="about.education">Education</h2>
+                <ul>
+                    <li data-lang-key="about.education-text"><strong>Southeast University</strong> — B.S. in Computer
+                        Science, Chin-Shiung Wu College (Elite CS Program)</li>
+                </ul>
+            </section>
+
+            <section class="detail-section">
+                <h2 data-lang-key="about.contact">Contact</h2>
+                <p data-lang-key="about.contact-text">
+                    Feel free to reach out via <strong>Ainepadma24@gmail.com</strong> or through any of the social
+                    platforms above. I'm always open to discussing new ideas, collaborations, or interesting problems
+                    in embedded systems and computer vision.
+                </p>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <span data-lang-key="footer.copyright">Copyright 2026 Ainepadma</span>
+            <a href="https://github.com/ainepadma" target="_blank" rel="noreferrer">GitHub</a>
+        </footer>
+    </div>
+
+    <div class="toast" id="email-toast" role="status" aria-live="polite" aria-atomic="true">
+        <span class="toast__text">Email copied</span>
+    </div>
+
+    <!-- i18n engine（已注释）
+    <script>
+        (() => {
+            const LANG_KEY = "ainepadma-lang";
+            const translations = {
+                en: {
+                    "nav.about": "About", "nav.blog": "Blog", "nav.creative": "Creative Projects",
+                    "nav.solutions": "Solutions", "nav.guestbook": "Guestbook",
+                    "about.eyebrow": "About", "about.title": "Who I Am",
+                    "about.name": "Ainepadma",
+                    "about.role": "Computer Science Top-notch Talent Program · Wu Chin-Shiung Honors College of Southeast University",
+                    "about.bio": "Computer science student focused on hardware and application software solutions. Passionate about embedded systems, computer vision, and building things that bridge the gap between software and the physical world.",
+                    "about.interests": "Interests & Focus",
+                    "about.education": "Education",
+                    "about.education-text": "Southeast University — B.S. in Computer Science, Chin-Shiung Wu College (Elite CS Program)",
+                    "about.contact": "Contact",
+                    "about.contact-text": "Feel free to reach out via Ainepadma24@gmail.com or through any of the social platforms above. I’m always open to discussing new ideas, collaborations, or interesting problems in embedded systems and computer vision.",
+                    "footer.copyright": "Copyright 2026 Ainepadma"
+                },
+                zh: {
+                    "nav.about": "关于", "nav.blog": "博客", "nav.creative": "创意项目",
+                    "nav.solutions": "解决方案", "nav.guestbook": "留言板",
+                    "about.eyebrow": "关于", "about.title": "我是谁",
+                    "about.name": "Ainepadma",
+                    "about.role": "东南大学 吴健雄学院 计算机科学与技术拔尖人才培养项目",
+                    "about.bio": "计算机科学与技术专业学生，专注于硬件与应用软件解决方案。热衷于嵌入式系统、计算机视觉，喜欢搭建连接软件与物理世界的桥梁。",
+                    "about.interests": "兴趣与研究方向",
+                    "about.education": "教育背景",
+                    "about.education-text": "东南大学 — 计算机科学与技术学士，吴健雄学院（精英计算机科学项目）",
+                    "about.contact": "联系方式",
+                    "about.contact-text": "欢迎通过 Ainepadma24@gmail.com 或上述任何社交平台与我联系。我始终乐于探讨新的想法、合作或嵌入式系统和计算机视觉领域的有趣问题。",
+                    "footer.copyright": "Copyright 2026 Ainepadma"
+                }
+            };
+            const isZh = (c) => ["CN","HK","TW","MO","SG","MY"].includes((c||"").toUpperCase());
+            const getLang = () => { const s = localStorage.getItem(LANG_KEY); return (s==="en"||s==="zh") ? s : null; };
+            const applyLang = (lang) => {
+                const t = translations[lang] || translations.en;
+                document.querySelectorAll("[data-lang-key]").forEach(el => { const k = el.getAttribute("data-lang-key"); if (t[k] != null) el.textContent = t[k]; });
+            };
+            const updateBtn = (lang) => { const b = document.getElementById("lang-switch"); if (b) b.textContent = lang==="zh" ? "EN" : "中"; };
+            const setLang = (lang) => { localStorage.setItem(LANG_KEY, lang); applyLang(lang); updateBtn(lang); };
+            const saved = getLang();
+            if (saved) { applyLang(saved); updateBtn(saved); } else { applyLang("en"); updateBtn("en"); fetch("https://ipapi.co/json/",{signal:AbortSignal.timeout(4000)}).then(r=>r.json()).then(d=>{if(!getLang()){const l=isZh(d.country_code)?"zh":"en";applyLang(l);updateBtn(l);localStorage.setItem(LANG_KEY,l);}}).catch(()=>{}); }
+            document.getElementById("lang-switch").addEventListener("click",()=>{setLang((getLang()||"en")==="zh"?"en":"zh");});
+        })();
+    </script>
+    -->
+
+    <script>
+        /* ── navigation ── */
+        (() => {
+            const nav = document.querySelector(".site-nav");
+            if (!nav) return;
+            let lastScrollY = window.scrollY;
+            let ticking = false;
+            const showNav = () => nav.classList.remove("site-nav--hidden");
+            const hideNav = () => nav.classList.add("site-nav--hidden");
+            const onScroll = () => {
+                const y = window.scrollY;
+                if (y <= 8) showNav();
+                else if (y > lastScrollY + 6) hideNav();
+                else if (y < lastScrollY - 6) showNav();
+                lastScrollY = y;
+                ticking = false;
+            };
+            window.addEventListener("scroll", () => {
+                if (!ticking) { window.requestAnimationFrame(onScroll); ticking = true; }
+            }, { passive: true });
+            window.addEventListener("mousemove", (e) => { if (e.clientY <= 24) showNav(); });
+            window.addEventListener("touchstart", (e) => {
+                const t = e.touches && e.touches[0]; if (t && t.clientY <= 24) showNav();
+            }, { passive: true });
+            showNav();
+        })();
+
+        /* ── email copy ── */
+        (() => {
+            const emailLink = document.querySelector("[data-email-link]");
+            if (!emailLink) return;
+            const email = emailLink.getAttribute("data-email") || "";
+            emailLink.setAttribute("href", "mailto:" + email);
+            const isMobile = /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
+            const toast = document.getElementById("email-toast");
+            let toastTimer = null;
+            const showToast = (msg) => {
+                if (!toast) return;
+                const textEl = toast.querySelector(".toast__text");
+                if (textEl) textEl.textContent = msg;
+                toast.classList.add("toast--show");
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => toast.classList.remove("toast--show"), 1600);
+            };
+            const fallbackCopy = (text) => {
+                const temp = document.createElement("textarea");
+                temp.value = text;
+                temp.setAttribute("readonly", "");
+                temp.style.position = "absolute";
+                temp.style.left = "-9999px";
+                document.body.appendChild(temp);
+                temp.select();
+                try { document.execCommand("copy"); } catch (e) { /* no-op */ }
+                document.body.removeChild(temp);
+            };
+            emailLink.addEventListener("click", (e) => {
+                if (!email) return;
+                e.preventDefault();
+                const afterCopy = () => {
+                    showToast("Email copied");
+                    if (isMobile) setTimeout(() => { window.location.href = "mailto:" + email; }, 160);
+                };
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(email).then(afterCopy).catch(() => {
+                        fallbackCopy(email);
+                        afterCopy();
+                    });
+                } else {
+                    fallbackCopy(email);
+                    afterCopy();
+                }
+            });
+        })();
+    </script>
+    <script src="../theme/smoke.js"></script>
+</body>
+
+</html>

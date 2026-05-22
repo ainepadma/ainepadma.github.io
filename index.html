@@ -1,0 +1,1664 @@
+<!doctype html>
+
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>Ainepadma | Home</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <meta name="description" content="Ainepadma personal site." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Syne:wght@600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        /* 主题颜色与全局变量 */
+        :root {
+            color-scheme: dark;
+            --bg: #0b0e13;
+            --panel: #141b26;
+            --card: #151d2a;
+            --text: #e7edf2;
+            --muted: #9aa4b2;
+            --accent: #f5b351;
+            --accent-2: #5ad2c3;
+            --line: #222c3a;
+            --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+            --nav-height: 84px;
+        }
+
+        /* 基础重置 */
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 页面背景与字体 */
+        body {
+            font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+            background:
+                radial-gradient(1200px 600px at 12% -10%, rgba(245, 179, 81, 0.2), transparent 60%),
+                radial-gradient(900px 500px at 90% 10%, rgba(90, 210, 195, 0.18), transparent 55%),
+                var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(120deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)),
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.05), transparent 60%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        #smoke-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            opacity: 1;
+        }
+
+        /* 语言切换按钮（已注释）
+        .lang-switch { display: none;
+            font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            background: transparent;
+            border: 1px solid rgba(90, 210, 195, 0.25);
+            border-radius: 999px;
+            padding: 5px 12px;
+            cursor: pointer;
+            transition: color 0.2s ease, text-shadow 0.25s ease, border-color 0.2s ease;
+            margin-left: 6px;
+        }
+
+        .lang-switch:hover,
+        .lang-switch:focus-visible {
+            color: var(--text);
+            border-color: rgba(90, 210, 195, 0.6);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75);
+        } */
+
+        /* 链接基础样式 */
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* 页面容器：控制整体宽度与间距 */
+        .page {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 3vw 100px;
+            padding-top: calc(32px + var(--nav-height));
+            display: grid;
+            gap: 32px;
+        }
+
+        /* 顶部导航：吸附触发区域 */
+        .nav-shell {
+            position: relative;
+            z-index: 40;
+            height: 0;
+        }
+
+        .nav-trigger {
+            display: none;
+        }
+
+        /* 顶部导航：站点名称与主导航 */
+        .site-nav {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 14px 6vw;
+            border-radius: 0;
+            background: linear-gradient(135deg, rgba(18, 25, 36, 0.70), rgba(14, 20, 30, 0.70));
+            border-bottom: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            transform: translateY(0);
+            opacity: 1;
+            transition: transform 0.25s ease, opacity 0.2s ease;
+        }
+
+        .site-nav--hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .brand {
+            display: grid;
+            gap: 4px;
+        }
+
+        .brand-title {
+            font-family: "Syne", sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 0.02em;
+        }
+
+        .brand-meta {
+            font-size: 0.72rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-links a {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--muted);
+            padding: 7px 14px;
+            border-radius: 999px;
+            border: none;
+            background: transparent;
+            transition: color 0.2s ease, text-shadow 0.25s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus-visible {
+            color: var(--text);
+            background: transparent;
+            box-shadow: none;
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75),
+                0 0 46px rgba(90, 210, 195, 0.6);
+        }
+
+        /* 主体内容容器 */
+        .content {
+            display: grid;
+            gap: 48px;
+        }
+
+        /* 个人信息区：头像与简介 */
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(240px, 360px) minmax(0, 1fr);
+            gap: 28px;
+            align-items: center;
+            padding: 28px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(18, 25, 36, 0.70), rgba(14, 20, 30, 0.70));
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            animation: rise 0.9s ease;
+        }
+
+        .hero-media {
+            display: grid;
+            gap: 14px;
+            justify-items: start;
+            min-width: 0;
+        }
+
+        .avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 24px;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-stamp {
+            font-size: 0.78rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .eyebrow {
+            font-size: 0.8rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin: 0 0 10px;
+        }
+
+        .hero-title {
+            font-family: "Syne", sans-serif;
+            font-size: clamp(2.2rem, 4vw, 3rem);
+            line-height: 1.05;
+            max-width: 100%;
+            margin: 0 0 8px;
+            transition: color 0.2s ease, text-shadow 0.25s ease;
+        }
+
+        .hero-title:hover,
+        .hero-title:focus-visible {
+            color: var(--accent-2);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75),
+                0 0 46px rgba(90, 210, 195, 0.6);
+        }
+
+        .hero-subtitle {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .hero-body {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .hero-social {
+            display: flex;
+            flex-wrap: wrap;
+            gap: clamp(10px, 2vw, 12px);
+            margin-top: 16px;
+        }
+
+        .social-link {
+            width: clamp(38px, 4.5vw, 44px);
+            height: clamp(38px, 4.5vw, 44px);
+            border-radius: clamp(12px, 2vw, 14px);
+            border: 1px solid rgba(90, 210, 195, 0);
+            background: rgba(16, 22, 32, 0);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border 0.2s ease,
+                color 0.2s ease;
+        }
+
+        .social-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 26px rgba(0, 0, 0, 0);
+            background: rgba(245, 179, 81, 0);
+            border-color: rgba(245, 179, 81, 0);
+            color: var(--accent);
+        }
+
+        .social-icon {
+            width: clamp(20px, 2.2vw, 22px);
+            height: clamp(20px, 2.2vw, 22px);
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .toast {
+            position: fixed;
+            right: 28px;
+            bottom: 28px;
+            background: rgba(16, 22, 32, 0.8);
+            color: var(--text);
+            border: 1px solid rgba(90, 210, 195, 0.35);
+            border-radius: 14px;
+            padding: 12px 16px;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .toast--show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast__text {
+            font-size: 0.85rem;
+            letter-spacing: 0.02em;
+        }
+
+        /* 项目区块标题 */
+        .section {
+            display: grid;
+            gap: 18px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .section-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .section-header a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s ease, text-shadow 0.25s ease;
+        }
+
+        .section-header a:hover,
+        .section-header a:focus-visible {
+            color: var(--text);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75),
+                0 0 46px rgba(90, 210, 195, 0.6);
+        }
+
+        .section-header h2 {
+            font-family: "Syne", sans-serif;
+            margin: 0;
+            font-size: 1.45rem;
+        }
+
+        .section-meta {
+            font-size: 0.8rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .card-meta {
+            font-size: 0.72rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .card-title {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .card-desc {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .section-footer {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .more-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 14px;
+            border-radius: 999px;
+            border: none;
+            color: var(--accent-2);
+            background: transparent;
+            transition: color 0.2s ease, text-shadow 0.25s ease;
+        }
+
+        .more-link:hover,
+        .more-link:focus-visible {
+            color: var(--text);
+            background: transparent;
+            box-shadow: none;
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75),
+                0 0 46px rgba(90, 210, 195, 0.6);
+        }
+
+        /* 项目卡片：展示主要项目 */
+        .project-card {
+            background: rgba(20, 27, 38, 0.70);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 22px;
+            display: grid;
+            gap: 14px;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease, border 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .project-card:hover,
+        .project-card:focus-visible {
+            transform: translateY(-3px);
+            border-color: rgba(210, 192, 90, 0.45);
+            box-shadow: 0 26px 54px rgba(221, 197, 92, 0.5);
+            background: rgba(20, 27, 38, 0.70);
+        }
+
+        .project-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .project-head h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+
+        .project-badge {
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: rgba(90, 210, 195, 0.15);
+            color: var(--accent-2);
+            font-size: 0.78rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            border: 1px solid rgba(90, 210, 195, 0.4);
+        }
+
+        .project-desc {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .project-link {
+            color: var(--accent-2);
+            font-weight: 600;
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            font-size: 0.78rem;
+            color: var(--muted);
+            border: 1px solid var(--line);
+            padding: 6px 10px;
+            border-radius: 999px;
+        }
+
+        /* Guestbook preview */
+        .guestbook-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .guestbook-card {
+            background: rgba(20, 27, 38, 0.72);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 22px;
+            display: grid;
+            gap: 12px;
+            box-shadow: var(--shadow);
+            animation: rise 0.8s ease;
+        }
+
+        .guestbook-card--empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 36px 22px;
+            color: var(--muted);
+        }
+
+        .guestbook-card__user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .guestbook-card__avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .guestbook-card__name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .guestbook-card__date {
+            font-size: 0.72rem;
+            color: var(--muted);
+            letter-spacing: 0.08em;
+        }
+
+        .guestbook-card__body {
+            color: var(--muted);
+            line-height: 1.6;
+            font-size: 0.92rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .guestbook-card__link {
+            color: var(--accent-2);
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: color 0.2s ease, text-shadow 0.25s ease;
+        }
+
+        .guestbook-card__link:hover {
+            color: var(--text);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75);
+        }
+
+        .guestbook-loading {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 24px;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        /* Blog card content */
+        .blog-card {
+            grid-column: 1 / -1;
+            gap: 18px;
+            align-items: start;
+        }
+
+        .blog-header {
+            display: grid;
+            gap: 6px;
+        }
+
+        .blog-body {
+            display: grid;
+            gap: 16px;
+            max-width: 72ch;
+            width: 100%;
+            margin-right: auto;
+        }
+
+        .blog-preview {
+            color: var(--muted);
+            line-height: 1.65;
+            font-size: 0.98rem;
+        }
+
+        .blog-full {
+            display: none;
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 0.98rem;
+        }
+
+        .blog-card.is-expanded .blog-full {
+            display: grid;
+            gap: 12px;
+        }
+
+        .blog-card.is-expanded .blog-preview {
+            display: none;
+        }
+
+        .blog-full h4 {
+            margin: 16px 0 6px;
+            font-size: 1.05rem;
+            color: var(--text);
+        }
+
+        .blog-full p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .blog-full strong {
+            color: var(--text);
+        }
+
+        .blog-full ul,
+        .blog-full ol {
+            margin: 0;
+            padding-left: 20px;
+            color: var(--muted);
+            display: grid;
+            gap: 6px;
+        }
+
+        .blog-quote {
+            margin: 0;
+            padding-left: 14px;
+            border-left: 2px solid rgba(90, 210, 195, 0.6);
+            font-style: italic;
+            color: var(--muted);
+        }
+
+        .blog-divider {
+            border: none;
+            height: 1px;
+            background: var(--line);
+            margin: 6px 0 10px;
+        }
+
+        .blog-table {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            overflow-x: auto;
+            background: rgba(10, 14, 20, 0.6);
+        }
+
+        .blog-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .blog-table th,
+        .blog-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--line);
+            vertical-align: top;
+        }
+
+        .blog-table th {
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text);
+        }
+
+        .blog-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .blog-signoff {
+            font-style: italic;
+            color: var(--muted);
+        }
+
+        .expand-btn {
+            justify-self: start;
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(90, 210, 195, 0.5);
+            background: rgba(16, 22, 32, 0.7);
+            color: var(--accent-2);
+            font-size: 0.78rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.2s ease, border 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+        }
+
+        .expand-btn:hover,
+        .expand-btn:focus-visible {
+            transform: translateY(-1px);
+            border-color: rgba(245, 179, 81, 0.6);
+            color: var(--text);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35);
+        }
+
+        /* 页脚区域 */
+        .site-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-top: 1px solid var(--line);
+            padding-top: 18px;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        .site-footer a {
+            color: var(--accent-2);
+            transition: color 0.2s ease, text-shadow 0.25s ease;
+        }
+
+        .site-footer a:hover,
+        .site-footer a:focus-visible {
+            color: var(--text);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75),
+                0 0 46px rgba(90, 210, 195, 0.6);
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-media {
+                justify-items: center;
+            }
+
+            .hero-social {
+                justify-content: center;
+            }
+
+            .card-grid,
+            .guestbook-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-footer {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .page {
+                padding: 0 6vw 60px;
+                padding-top: calc(24px + var(--nav-height));
+            }
+
+            .nav-links {
+                gap: 6px;
+            }
+
+            .nav-links a {
+                letter-spacing: 0.12em;
+            }
+
+            .hero {
+                padding: 22px;
+            }
+
+            .toast {
+                left: 16px;
+                right: 16px;
+                bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="smoke-canvas" data-color="#f5b351"></canvas>
+    <!-- 页面容器：控制整体宽度与间距 -->
+    <div class="page">
+        <!-- 顶部导航：站点名称与主导航链接 -->
+        <div class="nav-shell">
+            <div class="nav-trigger" aria-hidden="true"></div>
+            <nav class="site-nav">
+                <div class="brand">
+                    <a class="brand-title" href="https://ainepadma.github.io/">Ainepadma</a>
+
+                </div>
+                <div class="nav-links">
+                    <a href="https://ainepadma.github.io/about" data-lang-key="nav.about">About</a>
+                    <a href="https://ainepadma.github.io/blog" data-lang-key="nav.blog">Blog</a>
+                    <a href="https://ainepadma.github.io/creative-projects" data-lang-key="nav.creative">Creative
+                        Projects</a>
+                    <a href="https://ainepadma.github.io/solutions" data-lang-key="nav.solutions">Solutions</a>
+                    <a href="https://ainepadma.github.io/guestbook" data-lang-key="nav.guestbook">Guestbook</a>
+                    <!-- <button class="lang-switch" id="lang-switch" type="button" aria-label="Switch language">中</button> -->
+                </div>
+            </nav>
+        </div>
+
+        <!-- 主体内容：头像、名称与项目展示 -->
+        <main class="content">
+            <!-- 个人信息区：GitHub 头像与姓名 -->
+            <section class="hero">
+                <div class="hero-media">
+                    <img class="avatar" src="https://github.com/ainepadma.png" alt="Ainepadma avatar" />
+                    <a class="hero-title" href="https://ainepadma.github.io/about">Ainepadma</a>
+                </div>
+                <div class="hero-body">
+                    <h1 class="hero-stamp" data-lang-key="hero.elite">Elite CS</h1>
+                    <h1 class="hero-stamp" data-lang-key="hero.college">Chin-Shiung Wu College of Southeast University
+                    </h1>
+                    <p class="hero-subtitle" data-lang-key="hero.bio">
+                        Computer science student focused on hardware and application software solutions.</p>
+                    <div class="hero-social">
+                        <a class="social-link" href="https://github.com/ainepadma" target="_blank" rel="noreferrer"
+                            aria-label="GitHub">
+                            <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3"></path>
+                                <path
+                                    d="M16 22v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                                </path>
+                            </svg>
+                        </a>
+                        <a class="social-link" href="https://www.facebook.com/profile.php?id=61578713425728"
+                            target="_blank" rel="noreferrer" aria-label="Facebook">
+                            <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z">
+                                </path>
+                            </svg>
+                        </a>
+                        <a class="social-link" href="https://www.xiaohongshu.com/user/profile/65c2f00e000000001101ba14"
+                            target="_blank" rel="noreferrer" aria-label="Xiaohongshu">
+                            <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M2 3h6a4 4 0 0 1 4 4v14a4 4 0 0 0-4-4H2z"></path>
+                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a4 4 0 0 1 4-4h6z"></path>
+                            </svg>
+                        </a>
+                        <a class="social-link" data-email-link data-email="Ainepadma24@gmail.com" href="#"
+                            aria-label="Gmail">
+                            <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M4 6h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z">
+                                </path>
+                                <path d="M22 8l-10 7L2 8"></path>
+                                <path d="M6 18l6-6 6 6"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <a href="https://ainepadma.github.io/creative-projects">
+                        <h2 data-lang-key="section.creative">Creative Projects</h2>
+                    </a>
+                </div>
+                <div class="card-grid">
+                    <a class="project-card" href="https://ainepadma.github.io/creative-projects">
+                        <h3 class="card-title" data-lang-key="card.preview">Preview</h3>
+                        <p class="card-desc" data-lang-key="card.preview-desc">A weather forecast website that is
+                            favored by photographers and outdoor
+                            enthusiasts is about to be launched.</p>
+                    </a>
+                </div>
+            </section>
+
+            <!-- 项目区：展示当前主项目 -->
+            <section class="section">
+                <div class="section-header">
+                    <a href="https://ainepadma.github.io/solutions">
+                        <h2 data-lang-key="section.solutions">Solutions</h2>
+                    </a>
+                </div>
+                <a class="project-card" href="https://ainepadma.github.io/solutions">
+                    <div class="project-head">
+                        <h3>Liquid-Level-Detection</h3>
+                        <span class="project-badge">Vision System</span>
+                    </div>
+                    <p class="project-desc">
+                        Problem D of the 28th Electronics Design Contest of Southeast University : A beverage cup
+                        measuring device based on monocular vision</p>
+                    <p class="project-desc">
+                        This project features a monocular vision system and STM32 communication pipeline I designed. I
+                        implemented a dual-model YOLOv5 detection framework with IoU-based tracking, EMA smoothing, and
+                        a custom liquid surface detection algorithm using blob analysis and gradient scoring. On the
+                        STM32 side, I established a reliable UART communication protocol at 115200 baud for real-time
+                        vision data transmission, fused with INA240A1 current sensor readings, and drove an SSD1315 OLED
+                        display for status output. The integrated pipeline processes high-resolution camera frames and
+                        delivers stable measurement results every three frames.
+                    </p>
+
+                    <div class="tag-row">
+                        <span class="tag">MaixCAM</span>
+                        <span class="tag">YOLOv5</span>
+                        <span class="tag">STM32</span>
+                        <span class="tag">Computer Vision</span>
+                    </div>
+                </a>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <a href="https://ainepadma.github.io/blog">
+                        <h2 data-lang-key="section.blog">Blog</h2>
+                    </a>
+                </div>
+                <div class="card-grid">
+                    <a class="project-card blog-card" href="https://ainepadma.github.io/blog/reflection" data-blog-card
+                        data-max-length="720">
+                        <div class="blog-header">
+                            <h3 class="card-title" data-lang-key="blog.title">Reflections on a One-Week Electronics
+                                Design Competition</h3>
+                        </div>
+                        <div class="blog-body">
+                            <div class="blog-preview" data-preview></div>
+                            <div class="blog-full" data-full id="reflection-full">
+                                <p class="blog-quote" data-preview-skip>
+                                    Problem D, 28th Electronics Design Contest of Southeast University: A Beverage Cup
+                                    Measuring Device Based on Monocular Vision<br />
+                                    May 2026
+                                </p>
+                                <hr class="blog-divider" data-preview-skip />
+                                <h4>1. From Zero to One: How Much Can Be Done in Seven Days</h4>
+                                <p>
+                                    Seven days — transforming a seemingly simple problem ("measure the height of a
+                                    beverage in a cup using a single camera") from a paper proposal into a reliably
+                                    functioning embedded vision system. This was, without a doubt, the most technically
+                                    dense period of my undergraduate journey.
+                                </p>
+                                <p>
+                                    Looking back, we started with nothing more than a MaixCAM PRO development board, a
+                                    GC4653 camera sensor, an STM32 minimal system board, and a pile of Dupont wires. We
+                                    ended up delivering a complete device integrating <strong>dual-model YOLOv5 object
+                                        detection + liquid surface recognition + reference color extraction + UART
+                                        cross-chip communication + real-time OLED display</strong>. Glancing at the
+                                    project file structure, the <code>launch/</code> directory evolved from
+                                    <code>v1.0.1</code> all the way to <code>v1.3.6</code> — every version number
+                                    marking
+                                    a late-night debugging breakthrough.
+                                </p>
+                                <h4>2. The Breadth of the Tech Stack: Vision, Embedded, Communication — None Optional
+                                </h4>
+                                <p>
+                                    The difficulty of this problem lay not in drilling deep into any single domain, but
+                                    in <strong>multi-disciplinary system integration</strong>:
+                                </p>
+                                <div class="blog-table">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Layer</th>
+                                                <th>Technology</th>
+                                                <th>Pitfalls encountered</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Perception</strong></td>
+                                                <td>GC4653 2560×1440 image capture</td>
+                                                <td>High-res VI pool allocation failure — Camera must be initialized
+                                                    before YOLO</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Algorithm</strong></td>
+                                                <td>Dual-model YOLOv5 inference, liquid surface gradient detection, EMA
+                                                    smoothing &amp; locking</td>
+                                                <td>Model A/B confidence fusion weights tuned across 20+ parameter sets
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Communication</strong></td>
+                                                <td>MaixCAM UART → STM32 serial reception</td>
+                                                <td>Frame synchronization for CSV parsing at 115200 baud</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Actuation</strong></td>
+                                                <td>STM32 ADC sampling (INA240A1 current) + SSD1315 OLED display</td>
+                                                <td>Current sampling noise filtering</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p>
+                                    The deepest lesson: <strong>system integration is far harder than any individual
+                                        algorithm</strong>. Getting YOLOv5 running took only half a day. Getting the
+                                    detection results to flow reliably over UART to the STM32 and render correctly on a
+                                    0.96-inch OLED took two full days. Any subtle deviation in one link is magnified in
+                                    an end-to-end system.
+                                </p>
+                                <h4>3. The Algorithmic Heart: Liquid Surface Detection Was the Real Challenge</h4>
+                                <p>
+                                    Object detection (finding cups/bottles with YOLO) was actually the easiest part —
+                                    the model was pre-trained, just tune the parameters. The real challenge was
+                                    <strong>pinpointing the exact liquid surface inside the cup</strong>.
+                                </p>
+                                <p>This went through multiple rounds of trial and error:</p>
+                                <ol>
+                                    <li><strong>Canny edge detection approach</strong>
+                                        (<code>core/edge_detect.py</code>)
+                                        — completely unreliable under varying lighting; abandoned.</li>
+                                    <li><strong>Single blob detection</strong> — cup patterns and shadows produced
+                                        overwhelming false positives.</li>
+                                    <li><strong>Final approach</strong>: within the lower-half ROI of the object
+                                        bounding
+                                        box, score every row across four dimensions — gradient strength + color
+                                        similarity + above/below contrast + gradient direction bonus — apply weighted
+                                        scoring, then lock the result after 8 stable frames.</li>
+                                </ol>
+                                <p>
+                                    This algorithm consumed nearly 60% of total development time from conception to
+                                    stable operation. The takeaway: <strong>a seemingly intuitive problem (the human
+                                        eye instantly tells where the water surface is) often demands a mountain of
+                                        engineering tricks when implemented in computer vision</strong>.
+                                </p>
+                                <h4>4. Lessons from Dual-Model Fusion</h4>
+                                <p>Running two YOLOv5 models in parallel —</p>
+                                <ul>
+                                    <li>Model A (custom 2-class): high precision, limited generalization</li>
+                                    <li>Model B (COCO-pretrained 80-class): good generalization, lower confidence</li>
+                                </ul>
+                                <p>
+                                    Their fusion was never a simple weighted average. We designed a <strong>candidate
+                                        scoring system</strong> (confidence weight 5.0 + center proximity 2.0 +
+                                    previous-frame proximity 4.0 + liquid-level proximity 3.0), essentially encoding
+                                    temporal information and task priors into the fusion logic. This drove home a
+                                    crucial insight: <strong>on resource-constrained edge devices, algorithmic
+                                        competition is not about model size — it's about how efficiently you inject
+                                        domain knowledge into the inference pipeline</strong>.
+                                </p>
+                                <h4>5. Hardware War Stories</h4>
+                                <p>A few unforgettable hardware-level issues:</p>
+                                <ol>
+                                    <li><strong>Camera initialization order:</strong> loading the YOLO model before
+                                        initializing the Camera caused the 2560×1440 VI pool (~16.6 MB) allocation to
+                                        fail with <code>_create_vb_pool failed, id -2</code>. The NPU's shared memory
+                                        was already consumed by model weights. The fix was trivial — swap two lines of
+                                        code — but isolating this bug took an entire afternoon.</li>
+                                    <li><strong>Display resolution mismatch:</strong>
+                                        <code>img.resize(disp.width(), disp.height())</code> must be called before
+                                        <code>disp.show()</code>, otherwise the JPEG encoder's VB pool overflows with
+                                        <code>convert format failed</code>. A classic embedded Linux memory management
+                                        gotcha.
+                                    </li>
+                                    <li><strong>Lens selection:</strong> the 2.8–12mm variant of the JY-SDM12 proved far
+                                        more suitable than the 6.0–22mm for desktop scenarios at a 20–50 cm working
+                                        distance. Hardware selection cannot rely solely on spec sheets — it must be
+                                        tested against actual workspace conditions.</li>
+                                </ol>
+                                <p>
+                                    The common thread: <strong>error messages are separated from their root causes by
+                                        multiple layers of abstraction</strong>. On PC, we take transparent error
+                                    stacks for granted. On embedded platforms, every step is running bare-metal.
+                                </p>
+                                <h4>6. The New Paradigm of AI-Assisted Development</h4>
+                                <p>
+                                    This project used AI coding assistants (DeepSeek V4 Pro / GPT-5.2-Codex) throughout,
+                                    consuming an estimated 400–500 million cumulative tokens. That's not a cold,
+                                    impersonal number — it represents a fundamentally new way of developing:
+                                </p>
+                                <ul>
+                                    <li><strong>Rapid prototyping:</strong> from idea to runnable code, AI dramatically
+                                        shortened "typing time."</li>
+                                    <li><strong>Cross-domain knowledge bridging:</strong> when a vision algorithm
+                                        engineer needed to write an STM32 ADC driver, AI served as an instant
+                                        translator.</li>
+                                    <li><strong>Debugging acceleration:</strong> throw error logs at the AI, and it
+                                        often
+                                        pinpoints the root cause quickly (e.g., the VI pool allocation issue above).
+                                    </li>
+                                </ul>
+                                <p>
+                                    But clear-eyed honesty is required: <strong>AI cannot replace systems design
+                                        judgment</strong>. When to use dual models, how to design the four-dimensional
+                                    liquid surface scoring system, what IoU locking threshold to choose — these
+                                    decisions still depend on deep understanding of the problem. AI is an amplifier,
+                                    not a replacement.
+                                </p>
+                                <h4>7. Collaboration &amp; Project Management</h4>
+                                <p>
+                                    Although I competed solo, the engineering rigor of this README — system
+                                    architecture diagrams, communication protocol documentation, parameter tables, file
+                                    structure explanations — was itself a discipline of "collaborating with myself."
+                                    Over seven days, without clear documentation and version management, merely
+                                    locating the latest version among a dozen <code>.py</code> files would have wasted
+                                    enormous time.
+                                </p>
+                                <p>
+                                    The version numbering under <code>launch/</code> (v1.0.1 → v1.3.6) seems trivial,
+                                    but it was a lifeline: duplicate the old version before every major change, and
+                                    roll back instantly if things went wrong.
+                                </p>
+                                <h4>8. Summary &amp; Outlook</h4>
+                                <div class="blog-table">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Dimension</th>
+                                                <th>Takeaways</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Technical</strong></td>
+                                                <td>Mastered the end-to-end embedded vision pipeline: capture →
+                                                    inference → post-processing → communication → display</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Engineering</strong></td>
+                                                <td>Deeply understood how edge-device resource constraints (memory,
+                                                    compute, bandwidth) inversely shape algorithm design</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Methodology</strong></td>
+                                                <td>Established an efficient rhythm of "rapid iteration + version
+                                                    control + AI assistance"</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Mindset</strong></td>
+                                                <td>Shifted from "pursuing the perfect solution" to "get it running
+                                                    first, optimize later" — the only viable strategy under competition
+                                                    time pressure</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p>If there's a next edition, I would improve in three areas:</p>
+                                <ol>
+                                    <li><strong>Front-load hardware bring-up:</strong> camera, display, and UART driver
+                                        debugging should be completed on Day 0, not interleaved with algorithm
+                                        development.</li>
+                                    <li><strong>Build an automated test pipeline:</strong> collect a batch of labeled
+                                        test images and run regression tests after every algorithm change, rather than
+                                        squinting at the screen and thinking "it looks a bit more accurate."</li>
+                                    <li><strong>Introduce Kalman filtering earlier:</strong> EMA smoothing works
+                                        acceptably, but for fast-moving cups, a Kalman filter's predictive capability
+                                        would be superior.</li>
+                                </ol>
+                                <hr class="blog-divider" />
+                                <p>
+                                    Seven days of competition compressed a semester's worth of technical density into
+                                    a single week. From Day 1's "the camera just won't turn on" to the final night's
+                                    "liquid level height displayed steadily on the OLED," every error message, every
+                                    false detection, every UART frame drop forced rapid learning, rapid
+                                    decision-making, and rapid validation. That, perhaps, is the magic of the
+                                    electronics design contest — making the impossible possible, within the tightest
+                                    of deadlines.
+                                </p>
+                                <p class="blog-signoff"><em>— May 2026, Southeast University</em></p>
+                            </div>
+                            <button class="expand-btn" type="button" data-expand aria-expanded="false"
+                                aria-controls="reflection-full" data-lang-key="blog.unfold">Unfold</button>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- 留言板预览区 -->
+            <section class="section">
+                <div class="section-header">
+                    <a href="https://ainepadma.github.io/guestbook">
+                        <h2 data-lang-key="section.guestbook">Guestbook</h2>
+                    </a>
+                    <div class="section-actions">
+                        <a href="https://ainepadma.github.io/guestbook" class="more-link"
+                            data-lang-key="guestbook.view-all">
+                            View All &rarr;
+                        </a>
+                    </div>
+                </div>
+                <div id="guestbook-preview" class="guestbook-grid">
+                    <div class="guestbook-loading" data-lang-key="guestbook.loading">Loading messages...</div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 页脚：版权与外链 -->
+        <footer class="site-footer">
+            <span data-lang-key="footer.copyright">Copyright 2026 Ainepadma</span>
+            <a href="https://github.com/ainepadma" target="_blank" rel="noreferrer">GitHub</a>
+        </footer>
+    </div>
+
+    <div class="toast" id="email-toast" role="status" aria-live="polite" aria-atomic="true">
+        <span class="toast__text">Email copied</span>
+    </div>
+
+    <script>
+        (() => {
+            const nav = document.querySelector(".site-nav");
+            if (!nav) {
+                return;
+            }
+
+            let lastScrollY = window.scrollY;
+            let ticking = false;
+
+            const showNav = () => nav.classList.remove("site-nav--hidden");
+            const hideNav = () => nav.classList.add("site-nav--hidden");
+
+            const onScroll = () => {
+                const currentY = window.scrollY;
+                if (currentY <= 8) {
+                    showNav();
+                } else if (currentY > lastScrollY + 6) {
+                    hideNav();
+                } else if (currentY < lastScrollY - 6) {
+                    showNav();
+                }
+
+                lastScrollY = currentY;
+                ticking = false;
+            };
+
+            const handleScroll = () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(onScroll);
+                    ticking = true;
+                }
+            };
+
+            window.addEventListener("scroll", handleScroll, { passive: true });
+            window.addEventListener("mousemove", (event) => {
+                if (event.clientY <= 24) {
+                    showNav();
+                }
+            });
+            window.addEventListener(
+                "touchstart",
+                (event) => {
+                    const touch = event.touches && event.touches[0];
+                    if (touch && touch.clientY <= 24) {
+                        showNav();
+                    }
+                },
+                { passive: true }
+            );
+
+            showNav();
+        })();
+
+        (() => {
+            const emailLink = document.querySelector("[data-email-link]");
+            if (!emailLink) {
+                return;
+            }
+
+            const email = emailLink.getAttribute("data-email") || "";
+            const mailto = email ? `mailto:${email}` : "#";
+            emailLink.setAttribute("href", mailto);
+
+            const isMobile = /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
+
+            const toast = document.getElementById("email-toast");
+            let toastTimer = null;
+
+            const showToast = (message) => {
+                if (!toast) {
+                    return;
+                }
+
+                const textEl = toast.querySelector(".toast__text");
+                if (textEl) {
+                    textEl.textContent = message;
+                }
+
+                toast.classList.add("toast--show");
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => {
+                    toast.classList.remove("toast--show");
+                }, 1600);
+            };
+
+            const fallbackCopy = (text) => {
+                const temp = document.createElement("textarea");
+                temp.value = text;
+                temp.setAttribute("readonly", "");
+                temp.style.position = "absolute";
+                temp.style.left = "-9999px";
+                document.body.appendChild(temp);
+                temp.select();
+                try {
+                    document.execCommand("copy");
+                } catch (err) {
+                    // no-op
+                }
+                document.body.removeChild(temp);
+            };
+
+            emailLink.addEventListener("click", (event) => {
+                if (!email) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                const afterCopy = () => {
+                    showToast("Email copied");
+                    if (isMobile) {
+                        setTimeout(() => {
+                            window.location.href = mailto;
+                        }, 160);
+                    }
+                };
+
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(email).then(afterCopy).catch(() => {
+                        fallbackCopy(email);
+                        afterCopy();
+                    });
+                } else {
+                    fallbackCopy(email);
+                    afterCopy();
+                }
+            });
+        })();
+
+        (() => {
+            const blogCard = document.querySelector("[data-blog-card]");
+            if (!blogCard) {
+                return;
+            }
+
+            const full = blogCard.querySelector("[data-full]");
+            const preview = blogCard.querySelector("[data-preview]");
+            const button = blogCard.querySelector("[data-expand]");
+            if (!full || !preview || !button) {
+                return;
+            }
+
+            const maxLength = Number.parseInt(blogCard.getAttribute("data-max-length") || "0", 10) || 900;
+            const previewSource = full.cloneNode(true);
+            previewSource.querySelectorAll("[data-preview-skip]").forEach((node) => {
+                node.remove();
+            });
+
+            const fullText = previewSource.textContent
+                ? previewSource.textContent.replace(/\s+/g, " ").trim()
+                : "";
+
+            const setExpanded = (expanded) => {
+                blogCard.classList.toggle("is-expanded", expanded);
+                button.setAttribute("aria-expanded", String(expanded));
+                const lang = window.__i18n ? window.__i18n.getLang() || "en" : "en";
+                button.textContent = expanded
+                    ? (window.__i18n ? window.__i18n.t("blog.fold", lang) : "Fold")
+                    : (window.__i18n ? window.__i18n.t("blog.unfold", lang) : "Unfold");
+            };
+
+            if (!fullText) {
+                setExpanded(true);
+                button.style.display = "none";
+                return;
+            }
+
+            if (fullText.length <= maxLength) {
+                setExpanded(true);
+                button.style.display = "none";
+                return;
+            }
+
+            const clipped = fullText.slice(0, maxLength);
+            const safeClip = clipped.replace(/\s+\S*$/, "");
+            const snippet = safeClip.length ? safeClip : clipped;
+            preview.textContent = `${snippet}…`;
+            setExpanded(false);
+
+            button.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setExpanded(!blogCard.classList.contains("is-expanded"));
+            });
+        })();
+    </script>
+
+    <!-- i18n engine + IP geolocation (已注释)
+    <script>
+        (() => {
+            const LANG_KEY = "ainepadma-lang";
+            const translations = {
+                en: {
+                    "nav.about": "About",
+                    "nav.blog": "Blog",
+                    "nav.creative": "Creative Projects",
+                    "nav.solutions": "Solutions",
+                    "nav.guestbook": "Guestbook",
+                    "hero.elite": "CS Elite Program ",
+                    "hero.college": "Wu Chin-Shiung Honors  College of Southeast University",
+                    "hero.bio": "Computer science student focused on hardware and application software solutions.",
+                    "section.creative": "Creative Projects",
+                    "section.solutions": "Solutions",
+                    "section.blog": "Blog",
+                    "section.guestbook": "Guestbook",
+                    "card.preview": "Preview",
+                    "card.preview-desc": "A weather forecast website that is favored by photographers and outdoor enthusiasts is about to be launched.",
+                    "blog.title": "Reflections on a One-Week Electronics Design Competition",
+                    "blog.unfold": "Unfold",
+                    "blog.fold": "Fold",
+                    "guestbook.view-all": "View All →",
+                    "guestbook.loading": "Loading messages...",
+                    "guestbook.no-messages": "No messages yet.",
+                    "guestbook.be-first": "Be the first to leave one →",
+                    "footer.copyright": "Copyright 2026 Ainepadma"
+                },
+                zh: {
+                    "nav.about": "关于",
+                    "nav.blog": "博客",
+                    "nav.creative": "创意项目",
+                    "nav.solutions": "解决方案",
+                    "nav.guestbook": "留言板",
+                    "hero.elite": "计算机拔尖班",
+                    "hero.college": "东南大学 吴健雄学院",
+                    "hero.bio": "计算机科学与技术专业学生，专注于硬件与应用软件解决方案。",
+                    "section.creative": "创意项目",
+                    "section.solutions": "解决方案",
+                    "section.blog": "博客",
+                    "section.guestbook": "留言板",
+                    "card.preview": "预览",
+                    "card.preview-desc": "一个备受摄影师和户外爱好者青睐的天气预报网站即将上线。",
+                    "blog.title": "七天电子设计竞赛回顾与总结",
+                    "blog.unfold": "展开",
+                    "blog.fold": "收起",
+                    "guestbook.view-all": "查看全部 →",
+                    "guestbook.loading": "加载中...",
+                    "guestbook.no-messages": "暂无留言。",
+                    "guestbook.be-first": "来成为第一个留言的人 →",
+                    "footer.copyright": "Copyright 2026 Ainepadma"
+                }
+            };
+
+            const isZhRegion = (countryCode) => {
+                const zhRegions = ["CN", "HK", "TW", "MO", "SG", "MY"];
+                return zhRegions.includes((countryCode || "").toUpperCase());
+            };
+
+            const getLang = () => {
+                const stored = localStorage.getItem(LANG_KEY);
+                if (stored === "en" || stored === "zh") return stored;
+                return null;
+            };
+
+            const setLang = (lang) => {
+                localStorage.setItem(LANG_KEY, lang);
+                applyLang(lang);
+                updateLangButton(lang);
+            };
+
+            const applyLang = (lang) => {
+                const t = translations[lang] || translations.en;
+                document.querySelectorAll("[data-lang-key]").forEach((el) => {
+                    const key = el.getAttribute("data-lang-key");
+                    if (t[key] != null) {
+                        if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+                            el.placeholder = t[key];
+                        } else {
+                            el.textContent = t[key];
+                        }
+                    }
+                });
+                // Keep the lang attr on html for CSS if needed
+                document.documentElement.lang = lang;
+                // Notify other scripts that lang changed
+                window.dispatchEvent(new CustomEvent("langchange", { detail: { lang } }));
+            };
+
+            const updateLangButton = (lang) => {
+                const btn = document.getElementById("lang-switch");
+                if (btn) btn.textContent = lang === "zh" ? "EN" : "中";
+            };
+
+            // Detect by IP
+            const detectByIP = () => {
+                fetch("https://ipapi.co/json/", { signal: AbortSignal.timeout(4000) })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        const country = data.country_code || "";
+                        const detected = isZhRegion(country) ? "zh" : "en";
+                        if (!getLang()) {
+                            applyLang(detected);
+                            updateLangButton(detected);
+                            localStorage.setItem(LANG_KEY, detected);
+                        }
+                    })
+                    .catch(() => {
+                        // Fallback to en if geo-IP fails
+                        if (!getLang()) {
+                            applyLang("en");
+                            updateLangButton("en");
+                            localStorage.setItem(LANG_KEY, "en");
+                        }
+                    });
+            };
+
+            // Init
+            const saved = getLang();
+            if (saved) {
+                applyLang(saved);
+                updateLangButton(saved);
+            } else {
+                // Apply en first for instant render, IP will override if needed
+                applyLang("en");
+                updateLangButton("en");
+                detectByIP();
+            }
+
+            // Click handler
+            document.getElementById("lang-switch").addEventListener("click", () => {
+                const current = getLang() || "en";
+                setLang(current === "zh" ? "en" : "zh");
+            });
+
+            // Expose for use by blog expand and guestbook preview
+            window.__i18n = {
+                getLang,
+                setLang,
+                applyLang,
+                t: (key, lang) => (translations[lang || getLang() || "en"] || translations.en)[key] || key,
+                translations
+            };
+        })();
+    </script>
+    -->
+
+    <!-- Guestbook preview: fetch latest discussions -->
+    <script>
+        (() => {
+            const container = document.getElementById("guestbook-preview");
+            if (!container) return;
+
+            const REPO = "ainepadma/ainepadma.github.io";
+            const CATEGORY = "Guestbook";
+            const MAX = 10;
+
+            const timeAgo = (iso) => {
+                const diff = Date.now() - new Date(iso).getTime();
+                const mins = Math.floor(diff / 60000);
+                if (mins < 1) return "just now";
+                if (mins < 60) return `${mins}m ago`;
+                const hrs = Math.floor(mins / 60);
+                if (hrs < 24) return `${hrs}h ago`;
+                const days = Math.floor(hrs / 24);
+                if (days < 30) return `${days}d ago`;
+                const months = Math.floor(days / 30);
+                if (months < 12) return `${months}mo ago`;
+                return `${Math.floor(months / 12)}y ago`;
+            };
+
+            const renderCard = (discussion) => {
+                const user = discussion.user || {};
+                const avatar = user.avatar_url || "";
+                const login = user.login || "anonymous";
+                const body = (discussion.body || "").replace(/<[^>]*>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").slice(0, 300);
+                const date = timeAgo(discussion.created_at);
+                const url = discussion.html_url || "";
+
+                const card = document.createElement("div");
+                card.className = "guestbook-card";
+                card.style.animationDelay = `${Math.random() * 0.2}s`;
+                card.innerHTML = `
+                    <div class="guestbook-card__user">
+                        <img class="guestbook-card__avatar" src="${avatar}" alt="${login}" loading="lazy" />
+                        <span class="guestbook-card__name">${login}</span>
+                        <span class="guestbook-card__date">${date}</span>
+                    </div>
+                    <div class="guestbook-card__body">${body}</div>
+                    <a class="guestbook-card__link" href="${url}" target="_blank" rel="noreferrer">View on GitHub &rarr;</a>
+                `;
+                return card;
+            };
+
+            const t = (key) => window.__i18n ? window.__i18n.t(key) : key;
+
+            const renderEmpty = () => {
+                const card = document.createElement("div");
+                card.className = "guestbook-card guestbook-card--empty";
+                card.innerHTML = `
+                    <p>${t("guestbook.no-messages")} <a href="https://ainepadma.github.io/guestbook" style="color:var(--accent-2)">${t("guestbook.be-first")}</a></p>
+                `;
+                container.appendChild(card);
+            };
+
+            fetch(`https://api.github.com/repos/${REPO}/discussions?per_page=${MAX}`, {
+                headers: { Accept: "application/vnd.github+json" }
+            })
+                .then((res) => {
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    return res.json();
+                })
+                .then((discussions) => {
+                    container.innerHTML = "";
+                    const filtered = (discussions || []).slice(0, MAX);
+                    if (filtered.length === 0) {
+                        renderEmpty();
+                        return;
+                    }
+                    filtered.forEach((d) => container.appendChild(renderCard(d)));
+                })
+                .catch(() => {
+                    container.innerHTML = "";
+                    renderEmpty();
+                });
+        })();
+    </script>
+    <script src="theme/smoke.js"></script>
+</body>
+
+</html>

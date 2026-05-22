@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>Ainepadma | Guestbook</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <meta name="description" content="Leave a message — sign in with GitHub to comment." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Syne:wght@600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #0b0e13;
+            --panel: #141b26;
+            --text: #e7edf2;
+            --muted: #9aa4b2;
+            --accent: #f5b351;
+            --accent-2: #5ad2c3;
+            --line: #222c3a;
+            --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+            --nav-height: 84px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+            background:
+                radial-gradient(1200px 600px at 12% -10%, rgba(245, 179, 81, 0.2), transparent 60%),
+                radial-gradient(900px 500px at 90% 10%, rgba(90, 210, 195, 0.18), transparent 55%),
+                var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(120deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)),
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.05), transparent 60%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        #smoke-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            opacity: 0.55;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .page {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 6vw 80px;
+            padding-top: calc(32px + var(--nav-height));
+            display: grid;
+            gap: 32px;
+        }
+
+        .nav-shell {
+            position: relative;
+            z-index: 40;
+            height: 0;
+        }
+
+        .nav-trigger {
+            display: none;
+        }
+
+        .site-nav {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 14px 6vw;
+            background: linear-gradient(135deg, rgba(18, 25, 36, 0.7), rgba(14, 20, 30, 0.7));
+            border-bottom: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            transform: translateY(0);
+            opacity: 1;
+            transition: transform 0.25s ease, opacity 0.2s ease;
+            z-index: 50;
+        }
+
+        .site-nav--hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .brand {
+            display: grid;
+            gap: 4px;
+        }
+
+        .brand-title {
+            font-family: "Syne", sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-links a {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--muted);
+            padding: 7px 14px;
+            border-radius: 999px;
+            border: none;
+            background: transparent;
+            transition: color 0.2s ease, text-shadow 0.25s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus-visible {
+            color: var(--text);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75),
+                0 0 46px rgba(90, 210, 195, 0.6);
+        }
+
+        .nav-links .nav-active {
+            color: var(--text);
+            text-shadow:
+                0 0 6px rgba(90, 210, 195, 0.6),
+                0 0 18px rgba(90, 210, 195, 0.5);
+        }
+
+        /* 语言切换按钮（已注释）
+        .lang-switch { display: none;
+            font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            background: transparent;
+            border: 1px solid rgba(90, 210, 195, 0.25);
+            border-radius: 999px;
+            padding: 5px 12px;
+            cursor: pointer;
+            transition: color 0.2s ease, text-shadow 0.25s ease, border-color 0.2s ease;
+            margin-left: 6px;
+        }
+
+        .lang-switch:hover,
+        .lang-switch:focus-visible {
+            color: var(--text);
+            border-color: rgba(90, 210, 195, 0.6);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75);
+        } */
+
+        .page-header {
+            display: grid;
+            gap: 6px;
+            margin-bottom: 4px;
+            animation: rise 0.8s ease;
+        }
+
+        .page-eyebrow {
+            font-size: 0.78rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        .page-title {
+            font-family: "Syne", sans-serif;
+            font-size: clamp(2rem, 3.5vw, 2.8rem);
+            margin: 0;
+            line-height: 1.05;
+        }
+
+        .page-desc {
+            color: var(--muted);
+            line-height: 1.65;
+            max-width: 64ch;
+            margin: 8px 0 0;
+        }
+
+        /* giscus container */
+        .giscus-wrapper {
+            background: linear-gradient(135deg, rgba(18, 25, 36, 0.78), rgba(14, 20, 30, 0.85));
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: var(--shadow);
+            animation: rise 0.8s ease 0.1s both;
+        }
+
+        .site-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-top: 1px solid var(--line);
+            padding-top: 18px;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        .site-footer a {
+            color: var(--accent-2);
+            transition: color 0.2s ease, text-shadow 0.25s ease;
+        }
+
+        .site-footer a:hover,
+        .site-footer a:focus-visible {
+            color: var(--text);
+            text-shadow:
+                0 0 8px rgba(90, 210, 195, 0.85),
+                0 0 22px rgba(90, 210, 195, 0.75),
+                0 0 46px rgba(90, 210, 195, 0.6);
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .page {
+                padding: 0 6vw 60px;
+                padding-top: calc(24px + var(--nav-height));
+            }
+
+            .nav-links {
+                gap: 6px;
+            }
+
+            .nav-links a {
+                letter-spacing: 0.12em;
+            }
+
+            .giscus-wrapper {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="smoke-canvas" data-color="#f5b351"></canvas>
+    <div class="page">
+        <div class="nav-shell">
+            <div class="nav-trigger" aria-hidden="true"></div>
+            <nav class="site-nav">
+                <div class="brand">
+                    <a class="brand-title" href="https://ainepadma.github.io/">Ainepadma</a>
+                </div>
+                <div class="nav-links">
+                    <a href="https://ainepadma.github.io/about" data-lang-key="nav.about">About</a>
+                    <a href="https://ainepadma.github.io/blog" data-lang-key="nav.blog">Blog</a>
+                    <a href="https://ainepadma.github.io/creative-projects" data-lang-key="nav.creative">Creative
+                        Projects</a>
+                    <a href="https://ainepadma.github.io/solutions" data-lang-key="nav.solutions">Solutions</a>
+                    <a class="nav-active" href="https://ainepadma.github.io/guestbook"
+                        data-lang-key="nav.guestbook">Guestbook</a>
+                    <!-- <button class="lang-switch" id="lang-switch" type="button" aria-label="Switch language">中</button> -->
+                </div>
+            </nav>
+        </div>
+
+        <main class="content">
+            <header class="page-header">
+                <p class="page-eyebrow" data-lang-key="guestbook.eyebrow">Guestbook</p>
+                <h1 class="page-title" data-lang-key="guestbook.title">Leave a Message</h1>
+                <p class="page-desc" data-lang-key="guestbook.desc">
+                    Sign in with your GitHub account to leave a comment. Share your thoughts, feedback, or just say
+                    hello.
+                </p>
+            </header>
+
+            <div class="giscus-wrapper">
+                <script src="https://giscus.app/client.js" data-repo="ainepadma/ainepadma.github.io"
+                    data-repo-id="R_kgDOSg_Skg" data-category="Guestbook" data-category-id="DIC_kwDOSg_Sks4C9bx0"
+                    data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0"
+                    data-input-position="bottom" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous"
+                    async>
+                    </script>
+            </div>
+        </main>
+
+        <footer class="site-footer">
+            <span data-lang-key="footer.copyright">Copyright 2026 Ainepadma</span>
+            <a href="https://github.com/ainepadma" target="_blank" rel="noreferrer">GitHub</a>
+        </footer>
+    </div>
+
+    <!-- i18n engine（已注释）
+    <script>
+        (() => {
+            const LANG_KEY = "ainepadma-lang";
+            const translations = {
+                en: {
+                    "nav.about": "About",
+                    "nav.blog": "Blog",
+                    "nav.creative": "Creative Projects",
+                    "nav.solutions": "Solutions",
+                    "nav.guestbook": "Guestbook",
+                    "guestbook.eyebrow": "Guestbook",
+                    "guestbook.title": "Leave a Message",
+                    "guestbook.desc": "Sign in with your GitHub account to leave a comment. Share your thoughts, feedback, or just say hello.",
+                    "footer.copyright": "Copyright 2026 Ainepadma"
+                },
+                zh: {
+                    "nav.about": "关于",
+                    "nav.blog": "博客",
+                    "nav.creative": "创意项目",
+                    "nav.solutions": "解决方案",
+                    "nav.guestbook": "留言板",
+                    "guestbook.eyebrow": "留言板",
+                    "guestbook.title": "留下你的足迹",
+                    "guestbook.desc": "使用 GitHub 账号登录后即可留言。分享你的想法、反馈，或者只是打个招呼。",
+                    "footer.copyright": "Copyright 2026 Ainepadma"
+                }
+            };
+
+            const isZhRegion = (code) => ["CN", "HK", "TW", "MO", "SG", "MY"].includes((code || "").toUpperCase());
+
+            const getLang = () => {
+                const s = localStorage.getItem(LANG_KEY);
+                return (s === "en" || s === "zh") ? s : null;
+            };
+
+            const applyLang = (lang) => {
+                const t = translations[lang] || translations.en;
+                document.querySelectorAll("[data-lang-key]").forEach((el) => {
+                    const key = el.getAttribute("data-lang-key");
+                    if (t[key] != null) el.textContent = t[key];
+                });
+                document.documentElement.lang = lang;
+            };
+
+            const updateLangButton = (lang) => {
+                const btn = document.getElementById("lang-switch");
+                if (btn) btn.textContent = lang === "zh" ? "EN" : "中";
+            };
+
+            const setLang = (lang) => {
+                localStorage.setItem(LANG_KEY, lang);
+                applyLang(lang);
+                updateLangButton(lang);
+            };
+
+            const detected = getLang();
+            if (detected) {
+                applyLang(detected);
+                updateLangButton(detected);
+            } else {
+                applyLang("en");
+                updateLangButton("en");
+                fetch("https://ipapi.co/json/", { signal: AbortSignal.timeout(4000) })
+                    .then(r => r.json())
+                    .then(d => {
+                        if (!getLang()) {
+                            const lang = isZhRegion(d.country_code) ? "zh" : "en";
+                            applyLang(lang);
+                            updateLangButton(lang);
+                            localStorage.setItem(LANG_KEY, lang);
+                        }
+                    })
+                    .catch(() => {});
+            }
+
+            document.getElementById("lang-switch").addEventListener("click", () => {
+                setLang((getLang() || "en") === "zh" ? "en" : "zh");
+            });
+        })();
+    </script>
+    -->
+
+    <script>
+        (() => {
+            const nav = document.querySelector(".site-nav");
+            if (!nav) return;
+            let lastScrollY = window.scrollY;
+            let ticking = false;
+            const showNav = () => nav.classList.remove("site-nav--hidden");
+            const hideNav = () => nav.classList.add("site-nav--hidden");
+            const onScroll = () => {
+                const y = window.scrollY;
+                if (y <= 8) showNav();
+                else if (y > lastScrollY + 6) hideNav();
+                else if (y < lastScrollY - 6) showNav();
+                lastScrollY = y;
+                ticking = false;
+            };
+            window.addEventListener("scroll", () => {
+                if (!ticking) { window.requestAnimationFrame(onScroll); ticking = true; }
+            }, { passive: true });
+            window.addEventListener("mousemove", (e) => { if (e.clientY <= 24) showNav(); });
+            window.addEventListener("touchstart", (e) => {
+                const t = e.touches && e.touches[0]; if (t && t.clientY <= 24) showNav();
+            }, { passive: true });
+            showNav();
+        })();
+    </script>
+    <script src="../theme/smoke.js"></script>
+</body>
+
+</html>
