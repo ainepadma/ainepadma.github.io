@@ -59,6 +59,13 @@
             z-index: -1;
         }
 
+        #smoke-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+        }
+
         a {
             color: inherit;
             text-decoration: none;
@@ -361,6 +368,7 @@
 </head>
 
 <body>
+    <canvas id="smoke-canvas" data-color="#f5b351"></canvas>
     <div class="page">
         <!-- ── navigation ── -->
         <div class="nav-shell">
@@ -494,6 +502,7 @@
             showNav();
         })();
     </script>
+    <script src="../theme/smoke.js"></script>
 </body>
 
 </html>
